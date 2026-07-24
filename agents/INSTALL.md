@@ -33,8 +33,7 @@ s-brainstormer
 s-manager
 s-planner
 s-reviewer
-s-implementer-primary
-s-implementer-fallback
+s-implementer
 ```
 
 ## Option 1: Local Wrapper Adapter
