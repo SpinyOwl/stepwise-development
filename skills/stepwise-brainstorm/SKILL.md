@@ -80,6 +80,23 @@ Turn an ambiguous request into an approved design and a reviewed dependency-grap
 - Do not skip approval gates because a design seems obvious.
 - Do not invoke `stepwise-planner` until the planning brief is explicitly approved.
 
+## Output Markers
+
+Use emojis sparingly in user-facing headings and result labels, never as decoration or on every bullet:
+
+- `📋` plan, scope, or planning brief
+- `🔍` investigation or review
+- `💡` recommendation or decision
+- `✅` verified completion or passed result
+- `✔️` individual checked item or affirmative confirmation
+- `⚠️` risk, limitation, or non-blocking concern
+- `❗` action needed or material decision required
+- `✖️` intentionally not applicable, rejected option, or skipped item
+- `❌` failure, blocker, or unmet requirement
+- `🧪` automated or manual verification
+
+Keep task IDs, markdown checkboxes, commands, filenames, code, and Mermaid diagrams plain text. In final responses, use `💡` for recommendations and `❗` for required design or planning-brief approval.
+
 ## Final Response
 
 When the reviewed plan is ready, report:

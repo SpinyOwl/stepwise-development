@@ -66,6 +66,23 @@ Implement exactly one selected plan graph node as a small, testable, reviewable 
    - Do not commit, stage, push, or create a pull request unless explicitly requested.
    - If you updated plan checkboxes, include the plan document in the same uncommitted change set and summarize which boxes were checked.
 
+## Output Markers
+
+Use emojis sparingly in user-facing headings and result labels, never as decoration or on every bullet:
+
+- `📋` plan, scope, or planning brief
+- `🔍` investigation or review
+- `💡` recommendation or decision
+- `✅` verified completion or passed result
+- `✔️` individual checked item or affirmative confirmation
+- `⚠️` risk, limitation, or non-blocking concern
+- `❗` action needed or material decision required
+- `✖️` intentionally not applicable, rejected option, or skipped item
+- `❌` failure, blocker, or unmet requirement
+- `🧪` automated or manual verification
+
+Keep task IDs, markdown checkboxes, commands, filenames, code, and Mermaid diagrams plain text. In final responses, use `✅` for completed nodes, `🧪` for verification, and `❌` for blockers or unmet acceptance checks.
+
 ## Final Response
 
 Report the result concisely using this handoff format:

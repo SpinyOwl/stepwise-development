@@ -92,6 +92,23 @@ Manage execution of a stepwise dependency graph without directly making code cha
 - P2 findings should be fixed when clearly in scope; otherwise record them as follow-up work.
 - P3 findings are optional polish and should not block acceptance.
 
+## Output Markers
+
+Use emojis sparingly in user-facing headings and result labels, never as decoration or on every bullet:
+
+- `📋` plan, scope, or planning brief
+- `🔍` investigation or review
+- `💡` recommendation or decision
+- `✅` verified completion or passed result
+- `✔️` individual checked item or affirmative confirmation
+- `⚠️` risk, limitation, or non-blocking concern
+- `❗` action needed or material decision required
+- `✖️` intentionally not applicable, rejected option, or skipped item
+- `❌` failure, blocker, or unmet requirement
+- `🧪` automated or manual verification
+
+Keep task IDs, markdown checkboxes, commands, filenames, code, and Mermaid diagrams plain text. In final responses, use `📋` for graph execution status, `🔍` for review results, and `✅` for accepted work.
+
 ## Manager Review Checklist
 
 Before accepting an implementer result, verify:

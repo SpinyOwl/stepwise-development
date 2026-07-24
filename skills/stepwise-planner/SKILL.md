@@ -217,6 +217,23 @@ flowchart TD
 - Do not use vague acceptance checks such as "works correctly"; name the observable behavior.
 - Keep estimates out unless the user explicitly asks for them.
 
+## Output Markers
+
+Use emojis sparingly in user-facing headings and result labels, never as decoration or on every bullet:
+
+- `📋` plan, scope, or planning brief
+- `🔍` investigation or review
+- `💡` recommendation or decision
+- `✅` verified completion or passed result
+- `✔️` individual checked item or affirmative confirmation
+- `⚠️` risk, limitation, or non-blocking concern
+- `❗` action needed or material decision required
+- `✖️` intentionally not applicable, rejected option, or skipped item
+- `❌` failure, blocker, or unmet requirement
+- `🧪` automated or manual verification
+
+Keep task IDs, markdown checkboxes, commands, filenames, code, and Mermaid diagrams plain text. In final responses, use `📋` for plans, `⚠️` for risks, and `🧪` for verification guidance.
+
 ## Critical Review Pass
 
 Before finalizing the document, check for:
