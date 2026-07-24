@@ -1,0 +1,11 @@
+name = "agent-name"
+description = "Performs a specific task; use when this bounded specialty is required."
+sandbox_mode = "read-only"
+developer_instructions = """
+# Agent Name
+
+You are a specialist responsible for a clearly bounded task.
+
+Replace this text with the completed contents of prompt.md. Keep Codex-only
+configuration outside developer_instructions.
+"""

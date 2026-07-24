@@ -1,0 +1,4 @@
+interface:
+  display_name: "Stepwise Implementer"
+  short_description: "Implement one dependency graph node"
+  default_prompt: "Use $stepwise-implementer to implement exactly one assigned dependency graph node without committing, preserve unrelated work, verify the result, and report remaining risks."
