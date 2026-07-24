@@ -29,6 +29,9 @@ a platform cannot express the same behavior.
 | `codex.toml` | TOML with `developer_instructions` | `.codex/agents/<name>.toml` or `~/.codex/agents/<name>.toml` |
 | `claude.md` | YAML frontmatter and Markdown | `.claude/agents/<name>.md` or `~/.claude/agents/<name>.md` |
 
+See [installation instructions](INSTALL.md) for local-wrapper and native-link
+installation options across OpenCode, Codex, Claude Code, and other tools.
+
 Capability controls are semantic mappings, not exact equivalents:
 
 - OpenCode uses `permission` and `mode`.
@@ -54,8 +57,9 @@ The Stepwise agents migrated from OpenCode use model-neutral role names:
 | `s-implementer-terra` | `s-implementer-primary` |
 | `s-implementer-luna` | `s-implementer-fallback` |
 
-Install all five matching `opencode.md` adapters together. The manager adapter
-is configured to delegate to the new primary and fallback implementer names.
+Install the Stepwise OpenCode adapters together, including `s-brainstormer`.
+The manager adapter is configured to delegate to the new primary and fallback
+implementer names.
 
 Do not commit API keys, tokens, credentials, or absolute machine-specific
 paths in an agent definition.

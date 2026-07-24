@@ -25,6 +25,9 @@ templates/
     opencode.md
     codex.toml
     claude.md
+    opencode-wrapper.md
+    codex-wrapper.toml
+    claude-wrapper.md
   workflow-template.md
 ```
 
@@ -82,7 +85,12 @@ OpenCode can alternatively load this repository directly with `skills.paths`:
 
 ### Agents
 
-Install the adapter matching the target tool and rename it to the agent name:
+Use the [agent installation guide](agents/INSTALL.md) to choose a local wrapper
+adapter or a native link. The guide covers OpenCode, Codex, Claude Code, and
+the generic installation pattern for other agentic tools.
+
+When an adapter is installed directly, use the target tool's standard agent
+location:
 
 | Adapter | Project | User |
 | --- | --- | --- |
