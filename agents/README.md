@@ -42,5 +42,20 @@ Start by copying the complete `templates/agent/` directory. Replace
 `agent-name`, update the description in every adapter, and copy the completed
 canonical prompt into every adapter body.
 
+## Migrated Stepwise Agents
+
+The Stepwise agents migrated from OpenCode use model-neutral role names:
+
+| Original OpenCode agent | Repository package |
+| --- | --- |
+| `s-manager` | `s-manager` |
+| `s-planner` | `s-planner` |
+| `s-reviewer` | `s-reviewer` |
+| `s-implementer-terra` | `s-implementer-primary` |
+| `s-implementer-luna` | `s-implementer-fallback` |
+
+Install all five matching `opencode.md` adapters together. The manager adapter
+is configured to delegate to the new primary and fallback implementer names.
+
 Do not commit API keys, tokens, credentials, or absolute machine-specific
 paths in an agent definition.
