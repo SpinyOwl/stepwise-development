@@ -9,6 +9,25 @@ description: Explore and converge on a software design before planning. Use when
 
 Turn an ambiguous request into an approved design and a reviewed dependency-graph plan without implementing code. Conversation-only design work is the default; persist an artifact only when the user requests one. Use `stepwise-planner` only after the user approves both the design and the planning brief.
 
+## Golden Rule: YAGNI
+
+Apply YAGNI (You Aren't Gonna Need It) as the default scope and design
+principle throughout brainstorming. Design for the concrete problem and
+validated requirements at hand, not for speculative future needs:
+
+- Challenge requests, abstractions, extension points, configuration, and
+  compatibility layers that do not serve a current, evidenced use case.
+- Prefer the smallest design that satisfies the stated goal and acceptance
+  criteria. Do not add work merely because it might be useful later.
+- Separate confirmed current needs from possible future ideas. Record the
+  latter as non-goals or follow-up candidates instead of including them in the
+  approved scope.
+- When comparing approaches, treat unnecessary complexity, implementation
+  surface, maintenance cost, and unvalidated flexibility as explicit
+  drawbacks.
+- Revisit YAGNI during design approval and planning-brief review to detect
+  scope creep before implementation begins.
+
 ## Documentation Navigation
 
 Before exploring project context:
@@ -51,6 +70,8 @@ a durable artifact or the project already uses that section.
    - For each approach, explain the core idea, affected boundaries, benefits, tradeoffs, risks, and validation implications.
    - Recommend an approach and state the reasoning without treating it as approved.
    - Use a Mermaid diagram when it materially improves understanding of architecture, data flow, state transitions, user flow, ownership boundaries, or dependencies. Do not add diagrams as decoration.
+   - When discussing interface or user-experience design, consider whether visual comparison would materially improve the decision. If it would, offer to create a small set of lightweight HTML mockups with distinct design variants and open them in a browser for review.
+   - Create HTML mockups only after the user agrees. Keep them explicitly disposable and limited to exploring the current design decision; do not treat them as production code, a component implementation, or permission to expand scope.
 
 4. Present the design.
    - Present a concise, decision-ready design with these sections:
@@ -94,6 +115,28 @@ a durable artifact or the project already uses that section.
    - If the plan is misaligned, incomplete, over-scoped, or internally inconsistent, ask `stepwise-planner` to revise it before presenting it.
    - Present the reviewed plan, the verification of its design alignment, and any remaining decisions or risks.
 
+## Delegated Invocation
+
+When this skill is running inside a subagent invoked by another agent, the
+subagent must keep clarification context visible to the calling agent:
+
+- Do not ask the end user questions directly or hide the rationale in an
+  internal tool call. Return each question as part of a clarification package
+  for the calling agent.
+- For every question, include the required context paragraph before the
+  question and the separate explanation paragraph for each answer option when
+  practical.
+- Tell the calling agent that it must present the full clarification package
+  to the user, preserving the context and option explanations rather than
+  reducing it to unexplained question text or labels.
+- Wait for the calling agent to provide the user's answers before continuing
+  the clarification process. The calling agent should include those answers
+  in the next delegated invocation so unresolved decisions and their context
+  remain connected.
+
+When this skill is running in the primary agent, present the clarification
+package directly to the user.
+
 ## Approval Gates
 
 - Design approval: required before preparing a planning brief.
@@ -103,6 +146,7 @@ a durable artifact or the project already uses that section.
 ## Constraints
 
 - Do not implement code, make project edits, stage changes, or create commits.
+- The only exception during brainstorming is a user-approved lightweight HTML mockup used to compare interface designs. Keep such mockups isolated from production code and remove or discard them when they are no longer useful unless the user explicitly requests a durable artifact.
 - Do not persist brainstorming artifacts unless the user explicitly asks for a document.
 - Do not present a recommendation as a user decision.
 - Do not skip approval gates because a design seems obvious.
