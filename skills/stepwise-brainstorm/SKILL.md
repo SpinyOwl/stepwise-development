@@ -41,6 +41,8 @@ a durable artifact or the project already uses that section.
    - Ask only questions whose answers materially affect scope, behavior, constraints, tradeoffs, or validation.
    - Group logically related questions and ask no more than three questions in one message.
    - Prefer questions that offer concrete options when the project context makes options clear.
+   - Before each question, provide at least one paragraph of context explaining why the question matters, what decision it informs, and any relevant project facts, terminology, or tradeoffs. Do not present the question without this context.
+   - When a question has answer options, provide a separate paragraph for each option whenever practical. Explain what the option means, its main implications, and when it would be appropriate; do not use unexplained labels or bare lists of choices.
    - Do not repeat information already supplied by the user or established by project context.
    - If essential answers remain unknown, continue this step after each user response.
 
@@ -67,7 +69,7 @@ a durable artifact or the project already uses that section.
 
 5. Iterate until design approval.
    - If the user rejects the design or requests material changes, return to clarification.
-   - Ask the next logically grouped set of at most three questions, then revise the approaches and design.
+   - Ask the next logically grouped set of at most three questions, applying the same per-question context and per-option explanation requirements, then revise the approaches and design.
     - Do not prepare a plan or invoke `stepwise-planner` until the user explicitly approves the design.
     - If the user requests a durable record of an unresolved exploration, store
      it in `docs/drafts/` and update the nearest index.
