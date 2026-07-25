@@ -197,6 +197,11 @@ No universal standard exists for agent registration, permissions, or sandbox
 configuration. The portable `prompt.md` is the shared behavior source; each
 tool-local adapter controls its own metadata and capabilities.
 
+## Uninstallation
+
+See [UNINSTALL.md](UNINSTALL.md) for safe removal instructions for native
+links, wrappers, copied adapters, skills, and shared assets.
+
 ## Verification
 
 1. Restart the target tool when required.

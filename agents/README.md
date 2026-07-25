@@ -31,6 +31,8 @@ a platform cannot express the same behavior.
 
 See [installation instructions](INSTALL.md) for local-wrapper and native-link
 installation options across OpenCode, Codex, Claude Code, and other tools.
+See [uninstallation instructions](UNINSTALL.md) for removing installed agents
+and skills without deleting repository source files.
 
 Capability controls are semantic mappings, not exact equivalents:
 
