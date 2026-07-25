@@ -9,6 +9,15 @@ description: Create markdown dependency-graph plans for software projects at epi
 
 Produce a markdown plan that matches the requested planning level and lets the next engineer or agent act without guessing the intended scope.
 
+## Planning Root Compatibility
+
+Use the shared `folder-structure` convention when resolving plan
+paths. New projects use `docs/plans/`. For compatibility, use an existing
+`docs/work/` or root-level `work/` directory when no `docs/plans/` exists.
+Never create a new `work/` directory, and stop if multiple planning roots
+exist. The hierarchy and filename examples below apply relative to the
+resolved planning root.
+
 - High-level plans define epics, milestones, or phases as dependency graph nodes with architectural propositions, decisions, questions, risks, and validation points.
 - Phase documents consist of `T<N>` implementation task nodes, not steps.
 - Low-level plans divide a phase, feature, fix, or refactor into small implementation task nodes that can be reviewed and verified independently.
@@ -42,7 +51,7 @@ If the requested level is unclear, infer from scale:
    - Assign every epic, milestone, phase, or task a stable ID.
    - Use `E<N>` for epics, `M<N>` for milestones, `P<N>` for phases, and `T<N>` for low-level implementation tasks.
    - When writing one epic, milestone, phase, or task per file, name the file `{identifier} - {name}.md`, for example `M1 - Authentication foundation.md`.
-   - Store documents in this hierarchy: `work\{epic}.md`, `work\{epic-id}\{milestone}.md`, `work\{epic-id}\{milestone-id}\{phase}.md`, `work\{epic-id}\{milestone-id}\{phase-id}\{task}.md`.
+    - Store documents under the resolved planning root using full `{identifier} - {name}.md` filenames and ID-only parent directories.
    - In that hierarchy, `{epic}`, `{milestone}`, `{phase}`, and `{task}` are full document filenames using `{identifier} - {name}.md`; `{epic-id}`, `{milestone-id}`, and `{phase-id}` are ID-only directory names such as `E1`, `M1`, and `P1`.
    - For high-level planning, organize milestones or phases around capabilities, architecture decisions, ownership boundaries, and validation points.
    - When planning inside a phase, represent the phase's contents as `T<N>` tasks.
@@ -73,11 +82,11 @@ Use this structure for roadmaps, milestones, phase planning, and architecture-di
 
 File name: `<identifier> - <name>.md` for each epic, milestone, phase, or task document, such as `E1 - <Epic Name>.md`, `M1 - <Milestone Name>.md`, `P1 - <Phase Name>.md`, or `T1 - <Task Name>.md`. Use only the parent identifier, such as `E1`, `M1`, or `P1`, for nested directories.
 
-Document hierarchy:
-- `work\<epic>.md`
-- `work\<epic-id>\<milestone>.md`
-- `work\<epic-id>\<milestone-id>\<phase>.md`
-- `work\<epic-id>\<milestone-id>\<phase-id>\<task>.md`
+Document hierarchy (under the resolved planning root):
+- `<planning-root>\E1 - Epic name.md`
+- `<planning-root>\E1\M1 - Milestone name.md`
+- `<planning-root>\E1\M1\P1 - Phase name.md`
+- `<planning-root>\E1\M1\P1\T1 - Task name.md`
 
 ## Goal
 <One short paragraph describing the desired end state.>
@@ -196,7 +205,7 @@ flowchart TD
 - Give every epic, milestone, and phase a stable ID and dependency fields.
 - Use only `E<N>` for epics, `M<N>` for milestones, and `P<N>` for phases.
 - Name every epic, milestone, phase, and task document `{identifier} - {name}.md`.
-- Store graph documents under `work\{epic}.md`, `work\{epic-id}\{milestone}.md`, `work\{epic-id}\{milestone-id}\{phase}.md`, and `work\{epic-id}\{milestone-id}\{phase-id}\{task}.md`, where ID directory placeholders are ID-only names and document placeholders are full `{identifier} - {name}.md` filenames.
+- Store graph documents under the resolved planning root, normally `docs/plans/`; use an existing `docs/work/` or root-level `work/` only for compatibility.
 - End epic, milestone, and phase documents with a Mermaid dependency graph that matches the dependency fields.
 - Avoid over-specifying implementation details that belong in a later low-level plan.
 
@@ -249,6 +258,6 @@ Before finalizing the document, check for:
 - Dependency cycles, missing dependency IDs, stale Mermaid edges, or Mermaid nodes that do not match dependency fields.
 - Epic, milestone, or phase IDs that do not follow `E<N>`, `M<N>`, or `P<N>`.
 - Epic, milestone, phase, or task document filenames that do not follow `{identifier} - {name}.md`.
-- Epic, milestone, phase, or task documents outside the required `work\...` hierarchy.
+- Epic, milestone, phase, or task documents outside the resolved planning-root hierarchy.
 - Hidden sequential assumptions where task order appears only through document order instead of `Depends on`.
 - Unsafe parallelism labels for nodes that share files, public contracts, migrations, or overlapping test surfaces.

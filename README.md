@@ -29,6 +29,8 @@ templates/
     codex-wrapper.toml
     claude-wrapper.md
   workflow-template.md
+conventions/
+  folder-structure.md
 ```
 
 - `skills/` follows the open [Agent Skills specification](https://agentskills.io/specification).
@@ -37,6 +39,8 @@ templates/
 - `workflows/` stores tool-neutral process documents. A workflow that should be
   automatically discovered or invoked belongs in `skills/` instead.
 - `templates/` contains non-loadable starter files.
+- `conventions/` contains shared rules referenced by multiple skills and
+  bundled with setup skills when they must be installed into a target project.
 
 ## Portability Model
 
@@ -82,6 +86,11 @@ OpenCode can alternatively load this repository directly with `skills.paths`:
   }
 }
 ```
+
+Skills are packages, not just `SKILL.md` files. Install the complete skill
+directory, including `references/`, `templates/`, and any scripts or other
+supporting assets. In particular, `s-setup` includes the documentation
+convention and project folder templates that it copies into a target project.
 
 ### Agents
 

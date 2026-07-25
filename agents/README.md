@@ -54,8 +54,7 @@ The Stepwise agents migrated from OpenCode use model-neutral role names:
 | `s-manager` | `s-manager` |
 | `s-planner` | `s-planner` |
 | `s-reviewer` | `s-reviewer` |
-| `s-implementer-terra` | `s-implementer` |
-| `s-implementer-luna` | `s-implementer` |
+| `s-implementer` | `s-implementer` |
 
 Install the Stepwise OpenCode adapters together, including `s-brainstormer`.
 The manager adapter is configured to delegate code changes to `s-implementer`.

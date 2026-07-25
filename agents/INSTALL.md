@@ -127,6 +127,36 @@ ln -s "<repository-root>/agents/<agent-name>/claude.md" \
   "~/.claude/agents/<agent-name>.md"
 ```
 
+## Bundled Skill Assets
+
+When installing a skill, copy or link its complete directory rather than only
+`SKILL.md`. A skill may include required `references/`, `templates/`, scripts,
+or other supporting assets.
+
+The shared folder convention is installed alongside the skills. Copy
+`conventions/folder-structure.md` to the root of the installed skills
+directory as `folder-structure.md`.
+
+The `s-setup` skill must be installed with all of these files intact:
+
+```text
+skills/s-setup/
+  SKILL.md
+  templates/AGENTS.md
+  templates/docs/README.md
+  templates/docs/<section>/README.md
+folder-structure.md
+```
+
+After installation, invoke `s-setup` explicitly in the target project to copy
+the documentation template. Installing the skill alone must not modify
+the target project.
+
+The setup skill creates `docs/plans/` for new projects. For compatibility, it
+uses an existing `docs/plans/`, then `docs/work/`, then root-level `work/`, and
+asks before proceeding when multiple planning roots exist. It never creates a
+new `work/` directory.
+
 ## Other Agentic Tools
 
 Use the tool's native agent registration mechanism. When it supports an

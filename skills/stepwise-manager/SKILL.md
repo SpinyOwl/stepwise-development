@@ -9,6 +9,13 @@ description: Coordinate stepwise implementation work from dependency-graph plans
 
 Manage execution of a stepwise dependency graph without directly making code changes. Read the governing documentation, parse task IDs and dependency fields, coordinate a reusable stepwise-implementer agent for sequential code changes, add extra implementers only for safe parallel ready nodes, continue autonomously within the assigned milestone, phase, or task until a material decision is required, perform a code review after implementer changes are done, and keep the user informed of completed nodes, blockers, verification, and residual risk.
 
+## Planning Root Compatibility
+
+Resolve plan paths using the shared `folder-structure` convention.
+Use `docs/plans/` for new projects, fall back to an existing `docs/work/` or
+root-level `work/` directory for compatibility, never create a new `work/`
+directory, and stop if multiple planning roots exist.
+
 ## Workflow
 
 1. Ground the plan before delegation.
@@ -23,8 +30,7 @@ Manage execution of a stepwise dependency graph without directly making code cha
    - For high-level graph documents, expect `E<N>` epic IDs, `M<N>` milestone IDs, and `P<N>` phase IDs.
    - Treat phase contents as `T<N>` task nodes; do not look for or create "steps" under a phase.
    - When graph nodes are represented as separate epic, milestone, phase, or task files, expect filenames in `{identifier} - {name}.md` format.
-   - Expect graph documents to follow `work\{epic}.md`, `work\{epic-id}\{milestone}.md`, `work\{epic-id}\{milestone-id}\{phase}.md`, and `work\{epic-id}\{milestone-id}\{phase-id}\{task}.md`.
-   - In document hierarchy paths, treat `{epic-id}`, `{milestone-id}`, and `{phase-id}` as ID-only directory names such as `E1`, `M1`, and `P1`; treat `{epic}`, `{milestone}`, `{phase}`, and `{task}` as full `{identifier} - {name}.md` filenames.
+    - Expect graph documents under the resolved planning root, with ID-only parent directories and full `{identifier} - {name}.md` filenames.
    - Treat dependency fields as the source of truth; use Mermaid diagrams only as consistency checks.
    - Stop for graph ambiguity, dependency cycles, missing node IDs, invalid high-level IDs, filename/identifier mismatches, invalid document hierarchy, stale diagram edges, or dependencies that cannot be resolved from the plan.
    - Build ready sets: nodes whose dependencies are complete and unblocked.
@@ -43,7 +49,7 @@ Manage execution of a stepwise dependency graph without directly making code cha
    - Use available multi-agent or thread tools when present; search for them if necessary.
    - Use a named or clearly prompted `stepwise-implementer` worker agent for every code change. Do not edit code directly as `stepwise-manager`.
    - Before delegating work to another agent or skill, create or update the assigned node's task document as the durable handoff artifact.
-   - Store task documents in the required hierarchy: `work\{epic-id}\{milestone-id}\{phase-id}\{task}.md`, using ID-only parent directories and `{identifier} - {name}.md` for the task file.
+    - Store task documents under the resolved planning root, using ID-only parent directories and `{identifier} - {name}.md` for the task file.
    - Put the full task description, requirements, scope limits, dependency status, acceptance checks, expected verification, no-commit instruction, and relevant work context in the task document.
    - Do not duplicate parent epic, milestone, phase, architecture, or guideline content in the task document. Reference those documents by path and summarize only the task-specific implication when needed.
    - Include enough references in the task document for the delegated agent to reconstruct context by reading source documents: parent epic/milestone/phase docs, repository instructions, relevant architecture docs, and specific source/test files when known.

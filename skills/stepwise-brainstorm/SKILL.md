@@ -7,15 +7,35 @@ description: Explore and converge on a software design before planning. Use when
 
 ## Outcome
 
-Turn an ambiguous request into an approved design and a reviewed dependency-graph plan without implementing code or persisting brainstorming artifacts. Use `stepwise-planner` only after the user approves both the design and the planning brief.
+Turn an ambiguous request into an approved design and a reviewed dependency-graph plan without implementing code. Conversation-only design work is the default; persist an artifact only when the user requests one. Use `stepwise-planner` only after the user approves both the design and the planning brief.
+
+## Documentation Navigation
+
+Before exploring project context:
+
+1. Read the project's `AGENTS.md` or equivalent instruction file.
+2. Read `docs/README.md` when it exists.
+3. Read `docs/folder-structure.md` when it exists, or the installed shared
+   `folder-structure.md` beside this skill.
+4. Follow the relevant section index and explicit document links only. Do not
+   scan every document under `docs/`.
+
+Use the shared folder convention for all documentation paths. Exploratory
+brainstorming artifacts belong in `docs/drafts/`; coherent proposals belong in
+`docs/design/`. Do not create either optional section unless the user asks for
+a durable artifact or the project already uses that section.
 
 ## Workflow
 
 1. Explore project context.
    - Read applicable repository instructions, existing plans, architecture documents, relevant source code, tests, and current conventions.
+   - Start from `docs/README.md` and follow the smallest relevant document chain to the current epic, milestone, phase, or task.
+   - Read linked architecture, decision, design, and reference documents only when they are relevant to the request.
    - Summarize only context that materially affects the decision.
    - Separate established facts from assumptions and unknowns.
-   - Do not edit code, configuration, documentation, or planning files during brainstorming.
+    - Do not edit code, configuration, or planning files during brainstorming.
+    - Do not edit documentation during brainstorming unless the user explicitly
+      requests a durable draft or design artifact.
 
 2. Clarify the problem.
    - Ask only questions whose answers materially affect scope, behavior, constraints, tradeoffs, or validation.
@@ -48,7 +68,13 @@ Turn an ambiguous request into an approved design and a reviewed dependency-grap
 5. Iterate until design approval.
    - If the user rejects the design or requests material changes, return to clarification.
    - Ask the next logically grouped set of at most three questions, then revise the approaches and design.
-   - Do not prepare a plan or invoke `stepwise-planner` until the user explicitly approves the design.
+    - Do not prepare a plan or invoke `stepwise-planner` until the user explicitly approves the design.
+    - If the user requests a durable record of an unresolved exploration, store
+     it in `docs/drafts/` and update the nearest index.
+   - If the user requests a durable approved or active proposal, store it in
+     `docs/design/` and update the nearest index.
+   - Include a `Document Context` section and links to the relevant document
+     chain in any persisted artifact.
 
 6. Prepare and review the planning brief.
    - Convert the approved design into a concise planning brief for `stepwise-planner`.

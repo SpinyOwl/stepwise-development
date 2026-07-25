@@ -9,6 +9,13 @@ description: Implement one small, reviewable graph node from a stepwise dependen
 
 Implement exactly one selected plan graph node as a small, testable, reviewable change. Keep the working tree uncommitted unless the user explicitly asks for a commit.
 
+## Planning Root Compatibility
+
+Resolve plan paths using the shared `folder-structure` convention.
+Use `docs/plans/` for new projects, fall back to an existing `docs/work/` or
+root-level `work/` directory for compatibility, never create a new `work/`
+directory, and stop if multiple planning roots exist.
+
 ## Workflow
 
 1. Ground the work before editing.
@@ -18,8 +25,7 @@ Implement exactly one selected plan graph node as a small, testable, reviewable 
    - For high-level work, recognize `E<N>` as epic IDs, `M<N>` as milestone IDs, and `P<N>` as phase IDs.
    - For phase work, treat child work units as `T<N>` task nodes, not steps.
    - When the assigned epic, milestone, or phase is stored in its own document, expect `{identifier} - {name}.md` filename format.
-   - Expect graph documents to follow `work\{epic}.md`, `work\{epic-id}\{milestone}.md`, `work\{epic-id}\{milestone-id}\{phase}.md`, and `work\{epic-id}\{milestone-id}\{phase-id}\{task}.md`.
-   - In document hierarchy paths, treat `{epic-id}`, `{milestone-id}`, and `{phase-id}` as ID-only directory names such as `E1`, `M1`, and `P1`; treat `{epic}`, `{milestone}`, `{phase}`, and `{task}` as full `{identifier} - {name}.md` filenames.
+    - Expect graph documents under the resolved planning root, with ID-only parent directories and full `{identifier} - {name}.md` filenames.
    - Read the selected node's `Depends on`, `Enables`, and `Parallelizable with` fields when present.
    - Verify the selected node's dependencies are complete or explicitly cleared by `stepwise-manager` before editing. If not, stop and report the unmet dependency.
    - Read local repository instructions before any code changes, starting with `AGENTS.md`.
