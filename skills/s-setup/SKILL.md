@@ -38,17 +38,22 @@ docs/
   guides/README.md
   references/README.md
   plans/README.md
+  guides/stepwise-development-workflow.md
 ```
 
 Use `templates/AGENTS.md` as the starting point for a missing project
 instruction file and the files under `templates/docs/` as the starting point
-for documentation indexes.
+for documentation indexes and the default workflow document.
 
 Create `design/README.md` and `drafts/README.md` only when the user requests
 those optional sections or when existing documents require them.
 
 The generated `AGENTS.md` must instruct agents to start with `docs/README.md`
 and follow the documented chain rather than scanning all project documents.
+It must also install the default workflow rule from `templates/AGENTS.md`:
+substantive user requests go through `s-brainstormer` before planning or
+implementation, while routine Git and file-operation requests bypass
+brainstorming.
 The generated `docs/README.md` must link to the convention document and every
 created section index, and must identify the resolved planning root.
 
@@ -66,6 +71,8 @@ When the project already has documentation:
   to them only with user approval when the file already contains instructions.
 - Ask before changing an existing `AGENTS.md`, `opencode.json`, or equivalent
   tool configuration.
+- If an existing instruction file has a different default workflow, report the
+  conflict and ask before adding the Stepwise workflow rule.
 
 ## Verification
 

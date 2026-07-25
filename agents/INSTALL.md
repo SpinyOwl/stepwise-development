@@ -36,6 +36,35 @@ s-reviewer
 s-implementer
 ```
 
+## Existing Installations
+
+Before installing, inspect the target tool directories and determine whether
+each skill or agent is absent, already installed from this repository, or
+owned by another source.
+
+- If the exact repository link already exists, leave it in place.
+- If the exact repository file already exists, leave it in place and verify it
+  against the current source.
+- If a different file or directory uses the same name, do not overwrite it.
+  Ask whether to replace it, choose another name, or skip that item.
+- If a skill directory exists, copy only missing supporting files by default.
+  Do not overwrite local `SKILL.md`, templates, references, scripts, or other
+  assets without approval.
+- If an agent definition exists, preserve its local model, permission,
+  sandbox, description, and other tool-specific settings unless replacement is
+  explicitly approved.
+- If a previous installation used a wrapper, do not silently replace it with a
+  native link. Ask before changing the installation method.
+- If the same skill or agent is installed at both project and user scope,
+  identify which one the tool will load and avoid modifying the other scope
+  implicitly.
+- Treat `folder-structure.md` the same way: compare it with the canonical
+  convention and ask before replacing a locally modified copy.
+
+An update may be performed after approval by replacing the complete managed
+package or recreating the native link. Preserve unrelated files and report
+every skipped, preserved, replaced, and newly created path.
+
 ## Option 1: Local Wrapper Adapter
 
 Create a small, tool-local agent definition that instructs the agent to read
