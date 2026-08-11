@@ -38,7 +38,7 @@ If the requested level is unclear, infer from scale:
 ## Workflow
 
 1. Inspect the current project context before planning.
-   - Read existing architecture, implementation plans, contribution notes, module boundaries, and relevant code.
+   - Read the smallest applicable instruction and documentation chain, then inspect only the architecture, plans, module boundaries, code, and tests that materially affect the requested plan.
    - If local instructions conflict with the requested direction, raise the conflict before writing the plan.
    - Prefer the repository's current tools, testing style, naming, and planning conventions.
 
@@ -56,6 +56,7 @@ If the requested level is unclear, infer from scale:
    - For high-level planning, organize milestones or phases around capabilities, architecture decisions, ownership boundaries, and validation points.
    - When planning inside a phase, represent the phase's contents as `T<N>` tasks.
    - For low-level planning, slice the work into small reviewable implementation task nodes.
+   - Keep a single straightforward outcome as one concise task node; do not invent extra nodes merely to make the graph look substantial.
    - For every node, include explicit `Depends on`, `Enables`, and `Parallelizable with` metadata. Use `None` when no dependency exists.
    - Avoid speculative foundations unless a later listed milestone, phase, or task directly consumes them.
 
