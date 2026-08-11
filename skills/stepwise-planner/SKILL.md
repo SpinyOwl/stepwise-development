@@ -1,6 +1,6 @@
 ---
 name: stepwise-planner
-description: Create markdown dependency-graph plans for software projects at epic, milestone, phase, or implementation-task level. Use when turning a roadmap, milestone, feature, refactor, architecture change, bug-fix initiative, or vague goal into structured high-level milestones/phases or low-level graph nodes with stable IDs, explicit dependencies, acceptance checks, risks, verification guidance, and Mermaid dependency visualization.
+description: Create markdown plans for software projects, using dependency graphs for high-level epics, milestones, and phases and stable-ID tasks for low-level implementation work. Use when turning a roadmap, milestone, feature, refactor, architecture change, bug-fix initiative, or vague goal into structured outcomes or executable tasks with clear acceptance checks, risks, and verification guidance.
 ---
 
 # Stepwise Planner
@@ -11,17 +11,14 @@ Produce a markdown plan that matches the requested planning level and lets the n
 
 ## Planning Root Compatibility
 
-Use the shared `folder-structure` convention when resolving plan
-paths. New projects use `docs/plans/`. For compatibility, use an existing
-`docs/work/` or root-level `work/` directory when no `docs/plans/` exists.
-Never create a new `work/` directory, and stop if multiple planning roots
-exist. The hierarchy and filename examples below apply relative to the
-resolved planning root.
+Resolve plan paths using the single planning-root rule in the shared
+`folder-structure` convention. The hierarchy and filename examples below
+apply relative to that resolved planning root.
 
 - High-level plans define epics, milestones, or phases as dependency graph nodes with architectural propositions, decisions, questions, risks, and validation points.
-- Phase documents consist of `T<N>` implementation task nodes, not steps.
-- Low-level plans divide a phase, feature, fix, or refactor into small implementation task nodes that can be reviewed and verified independently.
-- Dependency metadata in task fields is the source of truth. Mermaid diagrams are derived views and must match the fields.
+- Phase documents consist of stable-ID `T<N>` implementation tasks, not steps.
+- Low-level plans divide a phase, feature, fix, or refactor into small implementation tasks that can be reviewed and verified independently; they are not dependency graphs by default.
+- High-level `Depends on` fields are authoritative. High-level Mermaid diagrams are derived views, and parallelism metadata is optional.
 
 ## Choose the Planning Level
 
@@ -47,7 +44,7 @@ If the requested level is unclear, infer from scale:
    - State explicit non-goals when they prevent speculative scope.
    - List assumptions and unknowns. Ask only for unknowns that would materially change the plan.
 
-3. Build the plan at the chosen level as a dependency graph.
+3. Build the plan at the chosen level.
    - Assign every epic, milestone, phase, or task a stable ID.
    - Use `E<N>` for epics, `M<N>` for milestones, `P<N>` for phases, and `T<N>` for low-level implementation tasks.
    - When writing one epic, milestone, phase, or task per file, name the file `{identifier} - {name}.md`, for example `M1 - Authentication foundation.md`.
@@ -55,23 +52,28 @@ If the requested level is unclear, infer from scale:
    - In that hierarchy, `{epic}`, `{milestone}`, `{phase}`, and `{task}` are full document filenames using `{identifier} - {name}.md`; `{epic-id}`, `{milestone-id}`, and `{phase-id}` are ID-only directory names such as `E1`, `M1`, and `P1`.
    - For high-level planning, organize milestones or phases around capabilities, architecture decisions, ownership boundaries, and validation points.
    - When planning inside a phase, represent the phase's contents as `T<N>` tasks.
-   - For low-level planning, slice the work into small reviewable implementation task nodes.
-   - Keep a single straightforward outcome as one concise task node; do not invent extra nodes merely to make the graph look substantial.
-   - For every node, include explicit `Depends on`, `Enables`, and `Parallelizable with` metadata. Use `None` when no dependency exists.
+   - For low-level planning, slice the work into small reviewable implementation tasks with stable `T<N>` IDs.
+   - Keep a single straightforward outcome as one concise task; do not invent extra tasks or a dependency graph merely to make the plan look substantial.
+   - For every high-level `E<N>`, `M<N>`, or `P<N>` node, include `Depends on`; use `None` when no dependency exists. Add `Parallelizable with` only when it communicates useful, safely established parallelism. Do not require `Enables`; when legacy or repository-local plans include it, treat it as a derived reverse view that cannot override `Depends on`.
+   - For every low-level `T<N>` task, include `Purpose`, `Changes`, `Acceptance Checks`, and `Risks`. Add `Prerequisites` only for a hard dependency or readiness condition.
+   - Tolerate legacy `Depends on`, `Enables`, and `Parallelizable with` fields in existing low-level plans. Interpret legacy task-level `Depends on` as prerequisite information and the other fields as advisory; do not rewrite them solely for format conformity.
    - Avoid speculative foundations unless a later listed milestone, phase, or task directly consumes them.
 
 4. Model dependencies and risk.
    - Put contract, data model, boundary, and architecture decisions before dependent implementation.
    - Put high-uncertainty spikes early, but time-box them and define their output.
    - Put broad cleanup after behavior is covered by tests or reviewable acceptance criteria.
-   - Do not encode ordering by document position alone. Express ordering through dependency fields.
-   - Mark parallelism only when nodes do not share files, public contracts, ordered migrations, or overlapping test surfaces likely to conflict.
+   - Do not encode high-level ordering by document position alone. Express it through authoritative `Depends on` fields.
+   - In low-level plans, arrange tasks in the recommended execution order. When `Prerequisites` is absent, document order supplies that recommendation without creating a hard dependency.
+   - Reserve `Prerequisites` for hard dependencies or readiness conditions that must be satisfied before a task can start; do not use it for every preferred sequencing choice.
+   - Mark optional high-level parallelism only when nodes do not share files, public contracts, ordered migrations, or overlapping test surfaces likely to conflict.
 
 5. Emit the requested markdown document or document set.
    - Use concise headings and checklists.
    - Include enough detail for the chosen level, but do not mix high-level roadmap planning with task-level implementation unless the user asks for both.
-   - End epic, milestone, and phase documents with a Mermaid `flowchart TD` dependency visualization derived from node dependency fields.
-   - Include a Mermaid dependency visualization in low-level implementation plans when they contain multiple graph nodes.
+   - End high-level documents that plan relationships among `E<N>`, `M<N>`, or `P<N>` nodes with a Mermaid `flowchart TD` dependency visualization derived from authoritative `Depends on` fields.
+   - Do not add a Mermaid dependency graph to a low-level plan merely because it contains multiple tasks. Include one only when the user or a stronger repository convention explicitly requires it.
+   - Include a `Document Context` section in every generated planning document.
    - Do not include motivational prose, project-management filler, or implementation details that belong in code comments.
 
 ## High-Level Planning Template
@@ -89,6 +91,12 @@ Document hierarchy (under the resolved planning root):
 - `<planning-root>\E1\M1\P1 - Phase name.md`
 - `<planning-root>\E1\M1\P1\T1 - Task name.md`
 
+## Document Context
+- Parent: <Link to the parent document, or None>
+- Children: <Links to child documents when applicable, or None>
+- Related: <Links to required architecture or decision documents, or None>
+- Next: <Next document to read, or None>
+
 ## Goal
 <One short paragraph describing the desired end state.>
 
@@ -102,8 +110,7 @@ Document hierarchy (under the resolved planning root):
 **Purpose:** <Why this milestone or phase exists.>
 
 **Depends on:** <None, or IDs this node requires.>
-**Enables:** <IDs this node unlocks.>
-**Parallelizable with:** <None, or IDs safe to execute in parallel.>
+<!-- Optional when useful: **Parallelizable with:** <IDs with safely established parallelism.> -->
 
 **Architectural Proposition:** <Preferred direction, boundary, or system shape.>
 
@@ -142,6 +149,12 @@ Use this structure for implementation-task plans unless the repository already h
 ````markdown
 # <Plan Title>
 
+## Document Context
+- Parent: <Link to the parent phase or plan, or None>
+- Children: <Links to separately stored task documents when applicable, or None>
+- Related: <Links to required architecture or decision documents, or None>
+- Next: <Next document to read, or None>
+
 ## Goal
 <One short paragraph describing the desired end state.>
 
@@ -158,12 +171,14 @@ Use this structure for implementation-task plans unless the repository already h
 
 ## Phase Tasks
 
+Tasks appear in recommended execution order. A task's optional `Prerequisites`
+lists only hard dependencies or readiness conditions that must be satisfied
+before it can start.
+
 ### T1: <Small Reviewable Outcome>
 **Purpose:** <Why this task exists.>
 
-**Depends on:** <None, or task IDs this node requires.>
-**Enables:** <Task IDs this node unlocks, or None.>
-**Parallelizable with:** <None, or task IDs safe to execute in parallel.>
+<!-- Optional when needed: **Prerequisites:** <Hard dependencies or readiness conditions.> -->
 
 **Changes:**
 - [ ] <Specific implementation task touching files, APIs, tests, docs, or assets>
@@ -187,14 +202,6 @@ Use this structure for implementation-task plans unless the repository already h
 
 ## Deferred Work
 - <Useful but intentionally postponed work>
-
-## Dependency Graph
-```mermaid
-flowchart TD
-  T1["T1: <Small Reviewable Outcome>"]
-  T2["T2: <Small Reviewable Outcome>"]
-  T1 --> T2
-```
 ````
 
 ## High-Level Quality Rules
@@ -203,23 +210,28 @@ flowchart TD
 - Do not name concrete classes, files, or methods unless they already exist or are clearly planned architecture entities.
 - Surface module boundaries, ownership, data flow, persistence/runtime implications, compatibility constraints, and unresolved tradeoffs.
 - Keep phase or milestone completion observable through decisions, artifacts, spikes, acceptance criteria, or readiness for low-level planning.
-- Give every epic, milestone, and phase a stable ID and dependency fields.
+- Give every epic, milestone, and phase a stable ID and an authoritative `Depends on` field.
 - Use only `E<N>` for epics, `M<N>` for milestones, and `P<N>` for phases.
 - Name every epic, milestone, phase, and task document `{identifier} - {name}.md`.
 - Store graph documents under the resolved planning root, normally `docs/plans/`; use an existing `docs/work/` or root-level `work/` only for compatibility.
-- End epic, milestone, and phase documents with a Mermaid dependency graph that matches the dependency fields.
+- Treat `Parallelizable with` as optional high-level metadata and include it only when useful and safe; do not require `Enables`.
+- End high-level documents that plan relationships among epic, milestone, or phase nodes with a Mermaid dependency graph derived from `Depends on`.
 - Avoid over-specifying implementation details that belong in a later low-level plan.
 
 ## Low-Level Task Quality Rules
 
 - Use verbs in task titles: "Add", "Extract", "Validate", "Wire", "Document".
 - Use stable task IDs in task titles, such as `T1: Add ...`.
-- Keep each task node independently understandable without reading every later node.
+- Keep each task independently understandable without reading every later task.
 - Make "done" observable: a passing test, a new API contract, a generated artifact, or a documented decision.
 - Format every concrete implementation task as an unchecked markdown task item (`- [ ] ...`) so implementers can mark completed work in the plan.
 - Use checkboxes for task-level implementation tasks and acceptance checks; avoid checkboxes for explanatory bullets that are not actionable.
-- Include `Depends on`, `Enables`, and `Parallelizable with` metadata for every task node. Use `None` explicitly when empty.
-- Include a Mermaid dependency graph when a low-level plan has more than one task node.
+- Include `Purpose`, `Changes`, `Acceptance Checks`, and `Risks` for every task.
+- Add `Prerequisites` only for a hard dependency or readiness condition; do not add an empty field by default.
+- Treat document order as the recommended execution order when `Prerequisites` is absent. Recommended order does not itself create a hard dependency.
+- Reserve `Prerequisites` for hard dependencies or readiness conditions, not ordinary sequencing preferences.
+- Do not manufacture task-level dependency metadata or Mermaid graphs. Multiple `T<N>` tasks alone do not imply a graph.
+- Accept legacy task-level `Depends on`, `Enables`, and `Parallelizable with` metadata when reviewing or extending existing plans. Treat legacy `Depends on` as prerequisites and the other fields as advisory.
 - Include expected code or artifact changes, tests, build commands, manual checks, or inspection criteria.
 - Include rollback or stop criteria when a task is risky.
 - Avoid tasks that combine unrelated concerns such as API design, storage migration, UI polish, and cleanup.
@@ -256,9 +268,11 @@ Before finalizing the document, check for:
 - Missing tests around changed contracts, serialization, persistence, or user-visible behavior in low-level plans.
 - Speculative abstractions not required by the stated goal.
 - Ordering errors where implementation precedes required contract, data, or architecture decisions.
-- Dependency cycles, missing dependency IDs, stale Mermaid edges, or Mermaid nodes that do not match dependency fields.
+- Missing, contradictory, cyclic, or ambiguous high-level `Depends on` fields that prevent safe sequencing.
+- Stale Mermaid edges or nodes: repair them when authoritative `Depends on` fields are clear, or report a warning when repair is outside the current scope. Do not reject a plan for diagram staleness alone.
 - Epic, milestone, or phase IDs that do not follow `E<N>`, `M<N>`, or `P<N>`.
 - Epic, milestone, phase, or task document filenames that do not follow `{identifier} - {name}.md`.
 - Epic, milestone, phase, or task documents outside the resolved planning-root hierarchy.
-- Hidden sequential assumptions where task order appears only through document order instead of `Depends on`.
+- Hidden high-level ordering assumptions that appear only through document order.
+- Low-level task order that is not a sensible recommended execution sequence, or a hard dependency/readiness condition that should be explicit under `Prerequisites`. Do not require `Prerequisites` for ordinary sequencing preferences.
 - Unsafe parallelism labels for nodes that share files, public contracts, migrations, or overlapping test surfaces.

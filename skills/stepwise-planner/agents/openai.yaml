@@ -1,4 +1,4 @@
 interface:
   display_name: "Stepwise Planner"
-  short_description: "Plan dependency graphs with Mermaid charts"
-  default_prompt: "Use $stepwise-planner to turn this goal into a structured dependency-graph epic, milestone, phase, or task plan with E<N>/M<N>/P<N> high-level IDs, phases consisting of T<N> task nodes, {identifier} - {name}.md filenames under work\\{epic}.md, work\\{epic-id}\\{milestone}.md, work\\{epic-id}\\{milestone-id}\\{phase}.md, and work\\{epic-id}\\{milestone-id}\\{phase-id}\\{task}.md, plus explicit dependency fields and a Mermaid dependency chart."
+  short_description: "Plan high-level graphs and ordered tasks"
+  default_prompt: "Use $stepwise-planner to create the requested Stepwise plan under the planning root resolved by the shared folder convention. Use E<N>/M<N>/P<N> high-level nodes with authoritative Depends on fields and derived Mermaid views; use graphless stable-ID T<N> implementation tasks in recommended document order, with optional Prerequisites only for hard constraints."

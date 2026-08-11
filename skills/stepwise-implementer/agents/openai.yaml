@@ -1,4 +1,4 @@
 interface:
   display_name: "Stepwise Implementer"
-  short_description: "Implement one dependency graph node"
-  default_prompt: "Use $stepwise-implementer to implement exactly one assigned dependency graph node without committing, preserve unrelated work, verify the result, and report remaining risks."
+  short_description: "Implement one Stepwise task or node"
+  default_prompt: "Use $stepwise-implementer to implement exactly one assigned stable-ID task or high-level node from its detailed durable handoff without committing. Honor authoritative high-level Depends on fields or optional hard task Prerequisites, preserve unrelated work, verify the result, and report remaining risks."

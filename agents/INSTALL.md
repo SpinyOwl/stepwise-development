@@ -36,6 +36,11 @@ s-reviewer
 s-implementer
 ```
 
+Install only the adapters required by the intended workflow. `s-planner` is an
+optional standalone entry point for planning. The brainstorming workflow
+invokes the `stepwise-planner` skill in the brainstormer's existing context,
+so it does not require or delegate to the `s-planner` agent.
+
 ## Existing Installations
 
 Before installing, inspect the target tool directories and determine whether
@@ -166,6 +171,12 @@ The shared folder convention is installed alongside the skills. Copy
 `conventions/folder-structure.md` to the root of the installed skills
 directory as `folder-structure.md`.
 
+At runtime, `s-setup` checks for the convention in the target project's
+`docs/folder-structure.md`, then at the installed skills root, then at
+`conventions/folder-structure.md` in a direct source-repository checkout. This
+allows the same skill package to run against an existing project copy, a
+normal installation, or this repository without a separate install step.
+
 The `s-setup` skill must be installed with all of these files intact:
 
 ```text
@@ -174,6 +185,7 @@ skills/s-setup/
   templates/AGENTS.md
   templates/docs/README.md
   templates/docs/<section>/README.md
+  templates/planning-root/README.md
 folder-structure.md
 ```
 
@@ -181,10 +193,12 @@ After installation, invoke `s-setup` explicitly in the target project to copy
 the documentation template. Installing the skill alone must not modify
 the target project.
 
-The setup skill creates `docs/plans/` for new projects. For compatibility, it
-uses an existing `docs/plans/`, then `docs/work/`, then root-level `work/`, and
-asks before proceeding when multiple planning roots exist. It never creates a
-new `work/` directory.
+The setup skill applies the planning-root rule in the shared convention. It
+uses the only existing candidate among `docs/plans/`, `docs/work/`, and
+root-level `work/`; asks which is authoritative when multiple candidates
+exist; and creates `docs/plans/` only when none exists. It creates or preserves
+`README.md` only in the resolved root, so legacy projects are not given a
+second `docs/plans/` root.
 
 ## Other Agentic Tools
 

@@ -1,4 +1,4 @@
 interface:
   display_name: "Stepwise Manager"
-  short_description: "Execute dependency graph nodes safely"
-  default_prompt: "Use $stepwise-manager to coordinate this dependency-graph plan. Parse node IDs and dependency fields, execute ready sets, create task documents for delegated work, pass short prompts that reference those task documents instead of duplicating context, conservatively parallelize only independent ready nodes, require implementer handoff packets, and perform severity-labeled code review before accepting completed nodes."
+  short_description: "Coordinate high-level graphs and ordered tasks"
+  default_prompt: "Use $stepwise-manager to coordinate this Stepwise plan without changing production code directly. Honor authoritative high-level Depends on fields or optional hard task Prerequisites, otherwise follow document order as the low-level recommendation. Put detailed context in durable handoffs, keep delegated prompts to IDs, paths, and immediate deltas or constraints, parallelize conservatively, and use evidence-focused manager acceptance after independent review."

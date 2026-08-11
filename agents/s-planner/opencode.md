@@ -1,5 +1,5 @@
 ---
-description: Creates dependency-graph plans for epics, milestones, phases, features, fixes, and refactors using the Stepwise planning workflow.
+description: Creates high-level dependency graphs or graphless ordered implementation-task plans using the Stepwise planning workflow.
 mode: subagent
 color: info
 permission:

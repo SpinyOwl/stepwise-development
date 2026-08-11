@@ -1,13 +1,13 @@
 ---
 name: stepwise-brainstorm
-description: Explore and converge on a software design before planning. Use when a user asks to brainstorm or compare approaches, or when a change has materially unclear behavior, competing architecture choices, broad scope, or high-impact tradeoffs; the skill gathers context, asks bounded questions, compares approaches, gains design approval, and hands a reviewed brief to stepwise-planner.
+description: Explore and converge on a software design before planning. Use when a user asks to brainstorm or compare approaches, or when a change has materially unclear behavior, competing architecture choices, broad scope, or high-impact tradeoffs; the skill gathers context, asks bounded questions, compares approaches, gains design approval, and invokes stepwise-planner in the same context with a reviewed brief.
 ---
 
 # Stepwise Brainstorm
 
 ## Outcome
 
-Turn an ambiguous or high-impact request into an approved design and a reviewed dependency-graph plan without implementing code. Conversation-only design work is the default; persist an artifact only when the user requests one. Use `stepwise-planner` after the user approves the design; require another approval only if the planner handoff introduces a new material decision.
+Turn an ambiguous or high-impact request into an approved design and a reviewed Stepwise plan without implementing code. Conversation-only design work is the default; persist brainstorm artifacts only when the user explicitly approves them. After design approval, invoke the `stepwise-planner` skill in the current context rather than delegating to a named planner agent; require another approval only if the planning brief introduces a new material decision.
 
 ## Golden Rule: YAGNI
 
@@ -52,9 +52,11 @@ a durable artifact or the project already uses that section.
    - Read linked architecture, decision, design, and reference documents only when they are relevant to the request.
    - Summarize only context that materially affects the decision.
    - Separate established facts from assumptions and unknowns.
-    - Do not edit code, configuration, or planning files during brainstorming.
-    - Do not edit documentation during brainstorming unless the user explicitly
-      requests a durable draft or design artifact.
+    - Keep project access read-only during design exploration except for
+      explicitly user-approved draft, design, or mockup artifacts and their
+      required index updates. Planner-created plan artifacts are permitted
+      later only through the approved same-context `stepwise-planner`
+      invocation.
 
 2. Clarify the problem.
    - Skip clarification when project context and the user's request already establish the decisions needed for a responsible recommendation.
@@ -106,14 +108,16 @@ a durable artifact or the project already uses that section.
    - State the intended planning level: high-level for roadmap, milestone, phase, or architectural direction; low-level for a concrete feature, fix, or refactor with known behavior.
    - Self-review the brief against the approved design for scope drift, missing constraints, premature implementation detail, and unresolved decisions.
    - Do not request a second approval when the brief faithfully restates the approved design. Ask only if preparing the brief exposes a new material decision or changes approved scope.
-   - Keep the design and planning brief in the conversation; do not create a project artifact at this stage.
+   - Keep the planning brief in the conversation rather than creating a separate brief artifact. Preserve any draft or design artifact the user already approved under the artifact exceptions.
 
-7. Invoke and review Stepwise Planner.
-   - Invoke `stepwise-planner` with the reviewed planning brief and relevant project context.
+7. Invoke and review Stepwise Planner in the same context.
+   - Invoke the `stepwise-planner` skill in the current agent context with the reviewed planning brief. Do not delegate planning to a separate agent.
+   - Reuse the project context already gathered during brainstorming. Supply a concise reference to that context and inspect only newly required information; do not restart discovery or redundantly reload the same files.
+   - Allow `stepwise-planner` to create or update the plan artifacts required by its planning workflow. This is a read-only brainstorm exception after design approval, not permission to edit implementation files.
    - Review the resulting plan before presenting it to the user.
    - Confirm that the plan matches the approved goal, non-goals, chosen approach, constraints, risks, validation strategy, and intended planning level.
    - Confirm that dependency metadata, task or phase boundaries, and Mermaid diagrams are internally consistent when present.
-   - If the plan is misaligned, incomplete, over-scoped, or internally inconsistent, ask `stepwise-planner` to revise it before presenting it.
+   - If the plan is misaligned, incomplete, over-scoped, or internally inconsistent, reapply `stepwise-planner` in the same context to revise it before presenting it.
    - Present the reviewed plan, the verification of its design alignment, and any remaining decisions or risks.
 
 ## Delegated Invocation
@@ -144,9 +148,10 @@ package directly to the user.
 
 ## Constraints
 
-- Do not implement code, make project edits, stage changes, or create commits.
-- The only exception during brainstorming is a user-approved lightweight HTML mockup used to compare interface designs. Keep such mockups isolated from production code and remove or discard them when they are no longer useful unless the user explicitly requests a durable artifact.
-- Do not persist brainstorming artifacts unless the user explicitly asks for a document.
+- Do not implement code, make unrelated project edits, stage changes, or create commits.
+- Project access remains read-only except for explicitly user-approved draft or design documents and their required index updates, explicitly user-approved lightweight mockups, and plan artifacts created or updated while applying `stepwise-planner` after design approval.
+- Keep mockups isolated from production code and remove or discard them when they are no longer useful unless the user explicitly approves them as durable artifacts.
+- Do not persist other brainstorming artifacts without explicit user approval.
 - Do not present a recommendation as a user decision.
 - Do not invoke `stepwise-planner` until the design is explicitly approved.
 - Do not create a redundant approval gate for a faithful restatement of the approved design.

@@ -22,7 +22,7 @@ compare approaches.
 Proceed directly when the request is well scoped and the intended behavior is
 clear. This includes focused bug fixes, small refactors, localized
 documentation or configuration changes, and implementation of an already
-approved plan or assigned Stepwise task node. Ask one focused question instead
+approved plan or assigned Stepwise task. Ask one focused question instead
 of starting a full brainstorm when a single answer would remove the ambiguity.
 
 Do not invoke brainstorming for routine Git or file-operation requests, such as
@@ -33,9 +33,16 @@ when requested.
 Choose the shortest responsible path:
 
 ```text
-ambiguous/high-impact request -> s-brainstormer -> approved design -> s-planner -> implementation
+ambiguous/high-impact request -> s-brainstormer -> approved design -> same-context stepwise-planner skill -> implementation
 well-scoped request or approved task -> direct planning or implementation
 ```
+
+After design approval, the brainstormer invokes the `stepwise-planner` skill in
+its existing context rather than delegating planning to a separate agent.
+Already gathered project context should not be redundantly reloaded.
+Brainstorming otherwise remains read-only except for explicitly user-approved
+draft, design, or mockup artifacts and plan artifacts created by the planner
+skill after design approval.
 
 Do not repeat brainstorming for work that already has an approved design or
 plan unless implementation exposes a new material decision. If brainstorming

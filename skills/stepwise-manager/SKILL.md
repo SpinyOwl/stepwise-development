@@ -1,20 +1,18 @@
 ---
 name: stepwise-manager
-description: Coordinate stepwise implementation work from dependency-graph plans through reusable stepwise-implementer agents, using small related batches and parallel workers only when safe. Use when asked to manage a multi-task implementation plan, resolve ready nodes, delegate code changes instead of editing directly, continue autonomously within an assigned boundary until a material decision is required, perform risk-based review, preserve scope, and decide whether to continue, retry, or stop.
+description: Coordinate Stepwise implementation from high-level dependency graphs or ordered stable-ID task plans through reusable stepwise-implementer agents, using small related batches and parallel workers only when safe. Use when asked to manage implementation, resolve ready work, delegate code changes instead of editing directly, continue within an assigned boundary until a material decision is required, perform risk-based review, preserve scope, and decide whether to continue, retry, or stop.
 ---
 
 # Stepwise Manager
 
 ## Outcome
 
-Manage execution of a stepwise dependency graph without directly making code changes. Read the smallest governing document chain, resolve ready nodes, coordinate reusable stepwise-implementer agents for one node or a tightly related small batch, continue autonomously within the assigned milestone, phase, or task until a material decision is required, perform an acceptance review after implementation, request independent review when risk justifies it, and keep the user informed of completed nodes, blockers, verification, and residual risk.
+Manage execution of Stepwise high-level graphs and low-level ordered task plans without directly making code changes. Read the smallest governing document chain, resolve ready work, coordinate reusable stepwise-implementer agents for one item or a tightly related small batch, continue autonomously within the assigned milestone, phase, or task until a material decision is required, perform acceptance review after implementation, request independent review when risk justifies it, and keep the user informed of completed work, blockers, verification, and residual risk.
 
 ## Planning Root Compatibility
 
-Resolve plan paths using the shared `folder-structure` convention.
-Use `docs/plans/` for new projects, fall back to an existing `docs/work/` or
-root-level `work/` directory for compatibility, never create a new `work/`
-directory, and stop if multiple planning roots exist.
+Resolve plan paths using the single planning-root rule in the shared
+`folder-structure` convention; do not apply a separate precedence rule.
 
 ## Workflow
 
@@ -26,75 +24,76 @@ directory, and stop if multiple planning roots exist.
    - Check `git status` so unrelated user changes are known and preserved.
 
 2. Build an execution map.
-   - Parse the graph nodes in the requested boundary and the external dependencies needed to determine their readiness. Do not map unrelated portions of a larger plan.
-   - For high-level graph documents, expect `E<N>` epic IDs, `M<N>` milestone IDs, and `P<N>` phase IDs.
-   - Treat phase contents as `T<N>` task nodes; do not look for or create "steps" under a phase.
-   - When graph nodes are represented as separate epic, milestone, phase, or task files, expect filenames in `{identifier} - {name}.md` format.
-    - Expect graph documents under the resolved planning root, with ID-only parent directories and full `{identifier} - {name}.md` filenames.
-   - Treat dependency fields as the source of truth; use Mermaid diagrams only as consistency checks.
-   - Stop for graph ambiguity, dependency cycles, missing node IDs, invalid high-level IDs, filename/identifier mismatches, invalid document hierarchy, stale diagram edges, or dependencies that cannot be resolved from the plan.
-   - Build ready sets: nodes whose dependencies are complete and unblocked.
-   - Mark shared files, shared APIs, shared tests, module-boundary risks, migration ordering, and likely conflict surfaces for each ready node.
-   - Decide which ready nodes must run sequentially and which, if any, can run in parallel.
-   - Parallelize conservatively only when ready nodes are independent by dependency, file path, public contract, migration order, verification surface, and module boundary.
+   - Parse only the high-level nodes or low-level tasks in the requested boundary and the external constraints needed to determine readiness. Do not map unrelated portions of a larger plan.
+   - For high-level graph documents, expect `E<N>` epic IDs, `M<N>` milestone IDs, and `P<N>` phase IDs. Treat each node's `Depends on` as authoritative; `Parallelizable with` and legacy `Enables` fields are advisory and cannot override it.
+   - Treat phase contents as stable-ID `T<N>` tasks, not steps or graph nodes by default. Each task should provide `Purpose`, `Changes`, `Acceptance Checks`, and `Risks`.
+   - Treat optional low-level `Prerequisites` as hard dependencies or readiness conditions. When `Prerequisites` is absent, document order is the recommended execution order, not a hard dependency graph.
+   - Tolerate legacy task-level `Depends on`, `Enables`, and `Parallelizable with` metadata. Interpret legacy `Depends on` as `Prerequisites` and the other fields as advisory; do not reject or rewrite usable plans merely to modernize metadata.
+   - When planning items are stored separately, expect `{identifier} - {name}.md` filenames under the resolved planning root, with ID-only parent directories.
+   - Use Mermaid diagrams only as derived consistency views of high-level `Depends on`. Repair stale diagrams when the authoritative fields are clear and the plan is in scope to edit; otherwise warn and continue. Stop only when authoritative high-level dependencies are missing, contradictory, cyclic, or otherwise ambiguous enough to prevent safe sequencing.
+   - Build high-level ready sets from authoritative dependencies. For low-level plans, select the earliest incomplete task whose hard prerequisites are satisfied unless an explicit assignment or safe execution choice justifies another ready task.
+   - Mark shared files, shared APIs, shared tests, module-boundary risks, migration ordering, and likely conflict surfaces for each ready item.
+   - Decide which ready items must run sequentially and which, if any, can run in parallel.
+   - Parallelize conservatively only when ready items are independent by hard constraint, file path, public contract, migration order, verification surface, and module boundary.
 
 3. Continue autonomously within the requested boundary.
-   - When the user asks to implement a milestone, phase, task range, graph node set, or specific node, keep coordinating implementation and review until that requested boundary is complete, blocked, or exhausted.
+   - When the user asks to implement a milestone, phase, task range, high-level node set, or specific task, keep coordinating implementation and review until that requested boundary is complete, blocked, or exhausted.
    - Make routine low-impact execution choices independently when they follow the plan, repository instructions, existing architecture, and established project patterns.
-   - Do not stop merely because another ready node is available inside the requested boundary.
+   - Do not stop merely because another ready item is available inside the requested boundary.
    - Stop when continuing would require a material decision, unclear product behavior, architecture tradeoff, migration strategy, dependency choice, public API contract, data-loss risk, security/privacy choice, or other high-impact assumption.
    - When blocked by a material decision, summarize the decision briefly, present the practical options and tradeoffs, ask the user for the needed choice, and continue implementation after the reply.
 
 4. Dispatch implementers.
    - Use the configured multi-agent or task delegation tool when present. Do not spend time searching for an alternative mechanism when the available tool capabilities are already known.
    - Use a named or clearly prompted `stepwise-implementer` worker agent for every code change. Do not edit code directly as `stepwise-manager`.
-   - Use the assigned node documents as the durable handoff when they already contain sufficient scope and acceptance checks. Create or update a task document only when the plan does not provide a reliable handoff.
+   - Use the assigned task documents as the durable handoff when they already contain sufficient detail. Create or update a task document only when the plan does not provide a reliable handoff.
     - Store newly required task documents under the resolved planning root, using ID-only parent directories and `{identifier} - {name}.md` for the task file.
-   - When a handoff document is needed, include the task description, requirements, scope limits, dependency status, acceptance checks, expected verification, no-commit instruction, and task-specific context.
-   - Do not duplicate parent epic, milestone, phase, architecture, or guideline content in the task document. Reference those documents by path and summarize only the task-specific implication when needed.
-   - Include enough references in the task document for the delegated agent to reconstruct context by reading source documents: parent epic/milestone/phase docs, repository instructions, relevant architecture docs, and specific source/test files when known.
-   - Pass delegated agents only a short prompt containing the skill to use, assigned node IDs, handoff document paths, and immediate execution constraints. Do not paste the full parent context into the agent prompt.
-   - Prefer reusing one long-lived `stepwise-implementer` agent for sequential code-change nodes in the same run. Spawn or resume that implementer once, then send later sequential nodes to the same agent with `send_input` or the equivalent follow-up mechanism.
-   - Before assigning a later node to a reused implementer, summarize accepted changes since its last turn and require it to re-check relevant files before editing.
-   - Do not spawn a fresh implementer for every sequential node unless the previous implementer is unavailable, closed, failed in a way that makes reuse unsafe, or the launcher cannot resume/send follow-up input.
-   - Assign one node by default. A single implementer may receive a small batch of ready nodes only when they are tightly related, touch the same coherent area, share one verification cycle, and remain individually traceable in the handoff.
-   - Spawn additional `stepwise-implementer` agents only for ready nodes or batches isolated by dependency, path, public contract, migration order, module boundary, and verification surface. State the merge/review order before dispatch.
-   - Give each implementer the assigned node IDs, relevant plan sections, dependency status, required docs to read, scope limits, expected verification, and a no-commit instruction unless the user explicitly requested commits.
+   - Durable handoffs must carry the detailed implementation context: task purpose and required changes, acceptance checks, risks, scope and non-goals, hard-prerequisite/readiness status, governing constraints and their task-specific implications, relevant source/test paths, expected verification, current accepted state, and the no-commit instruction.
+   - Link authoritative parent epic, milestone, phase, architecture, decision, instruction, and guideline documents by path. Summarize the details needed to execute the task without duplicating entire parent documents or forcing the worker to rediscover why each reference matters.
+   - Pass delegated agents only a short prompt containing assigned IDs, durable handoff paths, and immediate deltas or constraints that arose after the handoff was written. Do not repeat detailed context, requirements, or document contents in the delegated prompt.
+   - Prefer reusing one long-lived `stepwise-implementer` agent for sequential code-change items in the same run. Spawn or resume that implementer once, then send later sequential work to the same agent with `send_input` or the equivalent follow-up mechanism.
+   - Before assigning later work to a reused implementer, summarize accepted changes since its last turn as an immediate delta and require it to re-check relevant files before editing.
+   - Do not spawn a fresh implementer for every sequential item unless the previous implementer is unavailable, closed, failed in a way that makes reuse unsafe, or the launcher cannot resume/send follow-up input.
+   - Assign one item by default. A single implementer may receive a small batch of ready items only when they are tightly related, touch the same coherent area, share one verification cycle, and remain individually traceable in the handoff.
+   - Spawn additional `stepwise-implementer` agents only for ready items or batches isolated by hard constraint, path, public contract, migration order, module boundary, and verification surface. State the merge/review order before dispatch.
+   - Keep detailed context in the durable handoff, not the delegated prompt. If an immediate constraint such as a changed worktree, newly accepted predecessor, or temporary verification limitation is not yet recorded there, include only that delta in the prompt.
    - If multi-agent tools are unavailable, stop before making code changes and report that `stepwise-manager` cannot satisfy the delegation requirement in the current environment.
 
 5. Review every implementer result.
-   - After a `stepwise-implementer` completes code changes, perform a focused acceptance review before accepting, integrating, or marking assigned nodes complete. Do not repeat the implementer's full investigation when the handoff and evidence are sufficient.
-   - Require the implementer handoff packet: nodes implemented, files changed, behavior changed, tests run, tests not run, plan checkboxes updated, and risks/blockers.
+   - After a `stepwise-implementer` completes code changes, perform acceptance review before accepting, integrating, or marking assigned work complete. Do not repeat the implementer's full investigation when the handoff and evidence are sufficient.
+   - Require the implementer handoff packet: tasks or high-level nodes implemented, files changed, behavior changed, tests run, tests not run, plan checkboxes updated, and risks/blockers.
    - Delegate an independent `s-reviewer` pass when changes affect security, privacy, persistence, migrations, public contracts, shared module boundaries, broad user-visible behavior, or a large/conflict-prone diff; when verification is incomplete; or when the user requests independent review.
+   - Keep reviewer prompts short too: provide assigned IDs, paths to the durable handoff and available implementation/evidence artifacts, and immediate review deltas or constraints only. The reviewer reads detailed context from those artifacts.
    - For low-risk localized changes with focused passing tests, rely on the implementer's self-review plus the manager acceptance review instead of adding an independent reviewer.
-   - Inspect each final diff before accepting the assigned nodes.
-   - Compare the change against the assigned graph nodes, acceptance checks, governing repository instructions and architecture constraints, dependency status, and verification evidence.
-   - Verify that any plan checkbox updates are limited to the assigned nodes and are supported by completed implementation and verification evidence.
-   - Reject or send back work that drifts scope, batches extra nodes, weakens module boundaries, misses tests, leaves unchecked acceptance criteria unsupported, or absorbs unrelated user changes.
+   - When no independent reviewer runs, inspect the final diff and perform a focused acceptance review against the assigned work, acceptance checks, governing constraints, readiness status, and verification evidence.
+   - When an independent reviewer runs, do not conduct a third full code review. Base manager acceptance on the durable handoff, implementer packet, independent findings, finding resolutions, verification evidence, and current integration state. Inspect the integration diff only enough to confirm that the reviewed change set is the one being accepted and that no later or unrelated changes invalidate the evidence.
+   - In the independent-review path, send unresolved in-scope findings back to the implementer, then confirm their resolution and any required re-verification before acceptance. Re-delegate review only when the fix materially changes the reviewed risk surface or the reviewer requested another pass.
+   - Verify that any plan checkbox updates are limited to the assigned work and are supported by completed implementation and verification evidence.
+   - Reject or send back work that drifts scope, batches extra items, weakens module boundaries, misses tests, leaves unchecked acceptance criteria unsupported, or absorbs unrelated user changes.
    - Require the implementer to fix review findings when the issue belongs to the assigned work; record unrelated improvements as follow-up notes.
-   - After accepting assigned nodes, mark dependent nodes as newly unlocked only when all of their dependencies are complete and unblocked.
-   - If the same node or batch fails review twice for materially the same reason, stop and report the blocker instead of repeatedly retrying.
+   - After accepting high-level nodes, mark dependent nodes as newly unlocked only when all authoritative dependencies are complete and unblocked. In low-level plans, identify the next recommended task from document order whose hard prerequisites are satisfied.
+   - If the same item or batch fails review twice for materially the same reason, stop and report the blocker instead of repeatedly retrying.
 
 6. Integrate cautiously.
    - If implementers share the same worktree, inspect the resulting working tree directly after review passes.
    - If implementers work in isolated branches or worktrees, apply or merge accepted work only after review passes.
    - Resolve conflicts by preserving user changes and already accepted work.
-   - Prefer implementers updating plan checkboxes for the nodes they complete. As manager, verify those checkbox updates rather than making them yourself.
+   - Prefer implementers updating plan checkboxes for the work they complete. As manager, verify those checkbox updates rather than making them yourself.
    - Update plan or status documents only for manager-owned coordination notes, review outcomes, or user-requested reporting. Do not make code changes directly.
-   - Run combined verification after integrated nodes when shared contracts, build files, module boundaries, or user-visible behavior changed.
+   - Run combined verification after integrated work when shared contracts, build files, module boundaries, or user-visible behavior changed.
 
 7. Stop at the agreed boundary.
-   - Stop after the requested node set, task range, milestone slice, or batch.
-   - Do not continue into later plan nodes without user direction.
+   - Stop after the requested high-level node set, task range, milestone slice, or batch.
+   - Do not continue into later plan work without user direction.
    - Do not stage, commit, push, or create pull requests unless explicitly requested.
 
 ## Review Standards
 
 - Treat plan acceptance checks as requirements.
-- Prefer the fewest safe implementation batches. Use sequential execution only where dependencies or conflict surfaces require it.
+- Prefer the fewest safe implementation batches. Follow low-level document order as the default recommendation; vary it only for an explicit assignment or a stated safe execution reason. Treat sequential execution as mandatory only where hard dependencies or conflict surfaces require it.
 - Keep each implementer change small, testable, and reviewable.
 - Separate architecture concerns from code-style concerns when reviewing.
-- Record blockers as blockers; do not mark a node complete from partial work.
+- Record blockers as blockers; do not mark an item complete from partial work.
 - Manual verification is required when UI, runtime, native window, visual behavior, or other human-observable behavior changed and automation does not cover it.
 - Use severity labels for review findings:
 - P0/P1 findings must be fixed by `stepwise-implementer` before accepting the assigned work.
@@ -116,7 +115,7 @@ Use emojis sparingly in user-facing headings and result labels, never as decorat
 - `❌` failure, blocker, or unmet requirement
 - `🧪` automated or manual verification
 
-Keep task IDs, markdown checkboxes, commands, filenames, code, and Mermaid diagrams plain text. In final responses, use `📋` for graph execution status, `🔍` for review results, and `✅` for accepted work.
+Keep task IDs, markdown checkboxes, commands, filenames, code, and Mermaid diagrams plain text. In final responses, use `📋` for plan execution status, `🔍` for review results, and `✅` for accepted work.
 
 ## Manager Review Checklist
 
@@ -124,24 +123,24 @@ Before accepting an implementer result, verify:
 
 - A sufficient durable handoff exists in the plan or a task document; any newly created task document follows the required hierarchy.
 - The handoff packet is complete.
-- The diff is limited to the assigned graph node or approved small batch.
-- Every assigned node's dependencies were complete or explicitly cleared before implementation.
+- The diff is limited to the assigned task or high-level node, or an approved small batch.
+- Every assigned high-level node's authoritative dependencies or low-level task's hard prerequisites were complete or explicitly cleared before implementation.
 - Plan acceptance checks are satisfied or explicitly blocked.
 - Tests and manual verification match the risk of the change.
-- Plan checkbox edits, if any, belong only to the assigned nodes.
+- Plan checkbox edits, if any, belong only to the assigned work.
 - No unrelated user changes were reverted, absorbed, or reformatted.
 
 ## Final Response
 
 Report:
 
-- Nodes assigned, completed, rejected, retried, or blocked.
-- Which `stepwise-implementer` agents were reused, whether nodes were safely batched, and whether additional implementers were spawned for parallel work.
+- Tasks or high-level nodes assigned, completed, rejected, retried, or blocked.
+- Which `stepwise-implementer` agents were reused, whether items were safely batched, and whether additional implementers were spawned for parallel work.
 - Whether execution was sequential or parallel, and why.
-- Graph execution status: completed nodes, blocked nodes, active or parallel batches, and newly unlocked nodes.
+- Plan execution status: completed or blocked tasks/high-level nodes, active or parallel batches, and newly unlocked or next recommended work.
 - Key files changed by accepted work.
 - Plan checkboxes updated, if any.
-- Manager review findings, whether independent review was warranted, and how findings were resolved.
+- Manager acceptance evidence, whether independent review was warranted, its findings, and how findings were resolved without duplicating a third full review.
 - Automated verification commands and results.
 - Manual verification performed or still needed.
-- Remaining risks, blockers, and next recommended node.
+- Remaining risks, blockers, and next recommended work item.

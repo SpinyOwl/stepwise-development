@@ -58,8 +58,11 @@ The Stepwise agents migrated from OpenCode use model-neutral role names:
 | `s-reviewer` | `s-reviewer` |
 | `s-implementer` | `s-implementer` |
 
-Install the Stepwise OpenCode adapters together, including `s-brainstormer`.
-The manager adapter is configured to delegate code changes to `s-implementer`.
+Install the Stepwise OpenCode adapters needed for the intended workflow. The
+manager adapter delegates code changes to `s-implementer` and may delegate
+independent review to `s-reviewer`. `s-planner` remains available as an
+optional standalone planning agent; `s-brainstormer` invokes the
+`stepwise-planner` skill in its own context and does not require that agent.
 
 Do not commit API keys, tokens, credentials, or absolute machine-specific
 paths in an agent definition.
