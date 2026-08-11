@@ -4,7 +4,7 @@ Start here before planning, designing, implementing, or reviewing work.
 
 ## Reading Order
 
-1. Read `folder-structure.md`.
+1. Read [folder-structure.md](folder-structure.md).
 2. Read the relevant section index.
 3. Follow the parent document chain to the assigned task or current document.
 4. Read only explicitly linked architecture, decision, design, or reference
@@ -16,17 +16,11 @@ Do not scan all files under `docs/`.
 
 | Section | Purpose | Entry point |
 | --- | --- | --- |
-| Architecture | System boundaries and technical structure | `architecture/README.md` |
-| Decisions | Accepted decisions | `decisions/README.md` |
-| Guides | How-to and contributor guidance | `guides/README.md` |
-| References | Stable technical reference | `references/README.md` |
-| Plans | Epics, milestones, phases, and tasks | `plans/README.md` |
+| Plans | Epics, milestones, phases, and tasks | [Planning index]({{planning-root-index}}) |
 
-Optional `design/` and `drafts/` sections should be added here when created.
+Add architecture, decisions, guides, references, design, or drafts rows only
+when those optional sections exist.
 
 ## Planning Root
 
-Resolved planning root: `docs/plans/`
-
-If this project uses a legacy root, replace the value above with the selected
-existing `docs/work/` or `work/` path.
+Resolved planning root: `{{planning-root}}`

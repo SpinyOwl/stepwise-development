@@ -89,8 +89,9 @@ OpenCode can alternatively load this repository directly with `skills.paths`:
 
 Skills are packages, not just `SKILL.md` files. Install the complete skill
 directory, including `references/`, `templates/`, and any scripts or other
-supporting assets. In particular, `s-setup` includes the documentation
-convention and project folder templates that it copies into a target project.
+supporting assets. In particular, install `s-setup` with its project folder
+templates and the shared `conventions/folder-structure.md` asset as described
+in the agent installation guide.
 
 ### Agents
 
