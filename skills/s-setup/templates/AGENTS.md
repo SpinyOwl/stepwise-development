@@ -13,23 +13,31 @@ Do not scan all files under `docs/`.
 
 ## Default Development Workflow
 
-Route every substantive request through `s-brainstormer` before planning,
-designing, or implementing it. This includes feature requests, bug fixes,
-refactors, architecture changes, workflow changes, and documentation changes
-that affect project behavior or structure.
+Use `s-brainstormer` before planning or implementation when the request has
+materially unclear product behavior, competing architecture choices, broad or
+uncertain scope, migration or compatibility risk, or other decisions that need
+user agreement. Also use it whenever the user explicitly asks to brainstorm or
+compare approaches.
+
+Proceed directly when the request is well scoped and the intended behavior is
+clear. This includes focused bug fixes, small refactors, localized
+documentation or configuration changes, and implementation of an already
+approved plan or assigned Stepwise task node. Ask one focused question instead
+of starting a full brainstorm when a single answer would remove the ambiguity.
 
 Do not invoke brainstorming for routine Git or file-operation requests, such as
 status, diff, log, add, commit, branch operations, listing files, reading
 files, searching files, copying files, or moving files. Perform those directly
 when requested.
 
-The normal path for substantive work is:
+Choose the shortest responsible path:
 
 ```text
-user request -> s-brainstormer -> approved design -> s-planner -> implementation
+ambiguous/high-impact request -> s-brainstormer -> approved design -> s-planner -> implementation
+well-scoped request or approved task -> direct planning or implementation
 ```
 
-Do not skip the brainstorming step because the request appears small unless it
-is a routine Git or file operation. If `s-brainstormer` is not installed,
-report that the default workflow cannot be followed and ask whether to proceed
-directly or install the agent.
+Do not repeat brainstorming for work that already has an approved design or
+plan unless implementation exposes a new material decision. If brainstorming
+is warranted but `s-brainstormer` is unavailable, briefly explain the missing
+capability and ask whether to proceed with focused clarification instead.

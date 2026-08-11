@@ -1,35 +1,37 @@
 # Stepwise Development Workflow
 
-Substantive project requests follow this sequence:
+Use the shortest workflow that preserves the decisions and verification the
+change actually needs:
 
 ```text
-user request -> s-brainstormer -> approved design -> s-planner -> implementation
+ambiguous/high-impact request -> s-brainstormer -> approved design -> s-planner -> implementation
+well-scoped request or approved task -> direct planning or implementation
 ```
 
 ## Use Brainstorming
 
-Start `s-brainstormer` before planning, designing, or implementing:
+Start `s-brainstormer` when work has one or more of these characteristics:
 
-- Features.
-- Bug fixes.
-- Refactors.
-- Architecture changes.
-- Workflow changes.
-- Documentation changes that affect project behavior or structure.
+- Materially unclear product or API behavior.
+- Competing architecture or ownership choices.
+- Broad or uncertain scope.
+- Migration, compatibility, security, privacy, or data-loss risk.
+- A user request to brainstorm or compare approaches.
 
-The design must be approved before preparing a planning brief. The planning
-brief must be approved before invoking `s-planner`.
+The design must be approved before invoking `s-planner`. The brainstormer may
+prepare and self-review the planner handoff without a second approval unless it
+introduces a new material decision.
 
 ## Bypass Brainstorming
 
-Routine Git and file operations do not require brainstorming. Examples include
-checking status, viewing a diff or log, staging or committing changes, branch
-operations, listing files, reading files, searching files, copying files, and
-moving files.
+Well-scoped work with clear intended behavior does not require brainstorming.
+Examples include focused bug fixes, small refactors, localized documentation
+or configuration changes, implementation of approved plan nodes, and routine
+Git or file operations.
 
-When the request combines routine file operations with substantive changes,
-perform the routine operation first and route the substantive change through
-the default workflow.
+Ask one focused question instead of starting a full brainstorm when a single
+answer would make the work safe to execute. Do not repeat brainstorming for an
+approved design or plan unless implementation exposes a new material decision.
 
 ## Navigation
 

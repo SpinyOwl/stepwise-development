@@ -51,9 +51,9 @@ those optional sections or when existing documents require them.
 The generated `AGENTS.md` must instruct agents to start with `docs/README.md`
 and follow the documented chain rather than scanning all project documents.
 It must also install the default workflow rule from `templates/AGENTS.md`:
-substantive user requests go through `s-brainstormer` before planning or
-implementation, while routine Git and file-operation requests bypass
-brainstorming.
+ambiguous or high-impact requests go through `s-brainstormer`, while
+well-scoped changes, approved plan tasks, and routine Git or file operations
+may proceed directly.
 The generated `docs/README.md` must link to the convention document and every
 created section index, and must identify the resolved planning root.
 

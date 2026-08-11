@@ -1,13 +1,13 @@
 ---
 name: stepwise-brainstorm
-description: Explore and converge on a software design before planning. Use when a user asks to brainstorm a feature, change, architecture, workflow, or product behavior; the skill gathers context, asks focused questions, compares approaches, gains design approval, and hands an approved planning brief to stepwise-planner.
+description: Explore and converge on a software design before planning. Use when a user asks to brainstorm or compare approaches, or when a change has materially unclear behavior, competing architecture choices, broad scope, or high-impact tradeoffs; the skill gathers context, asks bounded questions, compares approaches, gains design approval, and hands a reviewed brief to stepwise-planner.
 ---
 
 # Stepwise Brainstorm
 
 ## Outcome
 
-Turn an ambiguous request into an approved design and a reviewed dependency-graph plan without implementing code. Conversation-only design work is the default; persist an artifact only when the user requests one. Use `stepwise-planner` only after the user approves both the design and the planning brief.
+Turn an ambiguous or high-impact request into an approved design and a reviewed dependency-graph plan without implementing code. Conversation-only design work is the default; persist an artifact only when the user requests one. Use `stepwise-planner` after the user approves the design; require another approval only if the planner handoff introduces a new material decision.
 
 ## Golden Rule: YAGNI
 
@@ -57,13 +57,14 @@ a durable artifact or the project already uses that section.
       requests a durable draft or design artifact.
 
 2. Clarify the problem.
+   - Skip clarification when project context and the user's request already establish the decisions needed for a responsible recommendation.
    - Ask only questions whose answers materially affect scope, behavior, constraints, tradeoffs, or validation.
    - Group logically related questions and ask no more than three questions in one message.
    - Prefer questions that offer concrete options when the project context makes options clear.
-   - Before each question, provide at least one paragraph of context explaining why the question matters, what decision it informs, and any relevant project facts, terminology, or tradeoffs. Do not present the question without this context.
-   - When a question has answer options, provide a separate paragraph for each option whenever practical. Explain what the option means, its main implications, and when it would be appropriate; do not use unexplained labels or bare lists of choices.
+   - Give only the context needed to explain why each question matters and what decision it informs, normally one or two sentences.
+   - When a question has answer options, explain each option's main implication concisely; do not use unclear labels or repeat context shared by all options.
    - Do not repeat information already supplied by the user or established by project context.
-   - If essential answers remain unknown, continue this step after each user response.
+   - Use no more than two clarification rounds by default. After that, proceed with clearly labeled assumptions when safe; continue asking only when an unresolved material decision would make a recommendation irresponsible.
 
 3. Propose approaches.
    - Present two or three viable approaches unless the context leaves only one responsible option.
@@ -104,11 +105,11 @@ a durable artifact or the project already uses that section.
    - Include the approved goal, non-goals, chosen approach, constraints, relevant context, risks, validation expectations, and resolved decisions.
    - State the intended planning level: high-level for roadmap, milestone, phase, or architectural direction; low-level for a concrete feature, fix, or refactor with known behavior.
    - Self-review the brief against the approved design for scope drift, missing constraints, premature implementation detail, and unresolved decisions.
-   - Present the brief to the user for review and request approval.
+   - Do not request a second approval when the brief faithfully restates the approved design. Ask only if preparing the brief exposes a new material decision or changes approved scope.
    - Keep the design and planning brief in the conversation; do not create a project artifact at this stage.
 
 7. Invoke and review Stepwise Planner.
-   - Invoke `stepwise-planner` with the user-approved planning brief and relevant project context.
+   - Invoke `stepwise-planner` with the reviewed planning brief and relevant project context.
    - Review the resulting plan before presenting it to the user.
    - Confirm that the plan matches the approved goal, non-goals, chosen approach, constraints, risks, validation strategy, and intended planning level.
    - Confirm that dependency metadata, task or phase boundaries, and Mermaid diagrams are internally consistent when present.
@@ -123,12 +124,10 @@ subagent must keep clarification context visible to the calling agent:
 - Do not ask the end user questions directly or hide the rationale in an
   internal tool call. Return each question as part of a clarification package
   for the calling agent.
-- For every question, include the required context paragraph before the
-  question and the separate explanation paragraph for each answer option when
-  practical.
+- For every question, include the brief required context and concise option
+  implications.
 - Tell the calling agent that it must present the full clarification package
-  to the user, preserving the context and option explanations rather than
-  reducing it to unexplained question text or labels.
+  to the user without reducing it to unexplained question text or labels.
 - Wait for the calling agent to provide the user's answers before continuing
   the clarification process. The calling agent should include those answers
   in the next delegated invocation so unresolved decisions and their context
@@ -139,8 +138,8 @@ package directly to the user.
 
 ## Approval Gates
 
-- Design approval: required before preparing a planning brief.
-- Planning brief approval: required before invoking `stepwise-planner`.
+- Design approval: required before invoking `stepwise-planner`.
+- Planning brief approval: required only when the brief introduces a new material decision or changes approved scope.
 - Planner output is reviewed for alignment before it is presented as the final plan.
 
 ## Constraints
@@ -149,8 +148,8 @@ package directly to the user.
 - The only exception during brainstorming is a user-approved lightweight HTML mockup used to compare interface designs. Keep such mockups isolated from production code and remove or discard them when they are no longer useful unless the user explicitly requests a durable artifact.
 - Do not persist brainstorming artifacts unless the user explicitly asks for a document.
 - Do not present a recommendation as a user decision.
-- Do not skip approval gates because a design seems obvious.
-- Do not invoke `stepwise-planner` until the planning brief is explicitly approved.
+- Do not invoke `stepwise-planner` until the design is explicitly approved.
+- Do not create a redundant approval gate for a faithful restatement of the approved design.
 
 ## Output Markers
 
@@ -174,7 +173,7 @@ Keep task IDs, markdown checkboxes, commands, filenames, code, and Mermaid diagr
 When the reviewed plan is ready, report:
 
 - Approved design summary
-- Approved planning brief summary
+- Reviewed planning brief summary
 - Planning level selected and why
 - `stepwise-planner` review result
 - Remaining decisions, risks, or follow-up work
