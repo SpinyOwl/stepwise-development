@@ -53,6 +53,7 @@ and acceptance still come only from authoritative sources.
    - Make routine low-impact execution choices independently when they follow the plan, repository instructions, existing architecture, and established project patterns.
    - Do not stop merely because another ready item is available inside the requested boundary.
    - Stop when continuing would require a material decision, unclear product behavior, architecture tradeoff, migration strategy, dependency choice, public API contract, data-loss risk, security/privacy choice, or other high-impact assumption.
+   - When a visualization, concept, or comparison would materially help the user make that decision, offer to create a lightweight HTML page or set of HTML variants for browser review. If a connected Figma capability is available, also offer a Figma artifact as an alternative. Create the selected artifact only after the user agrees, keep it disposable and outside production scope, and do not edit production code directly as `stepwise-manager`.
    - When blocked by a material decision, summarize the decision briefly, present the practical options and tradeoffs, ask the user for the needed choice, and continue implementation after the reply.
 
 4. Dispatch implementers.

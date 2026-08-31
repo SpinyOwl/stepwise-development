@@ -77,8 +77,8 @@ a durable artifact or the project already uses that section.
    - For each approach, explain the core idea, affected boundaries, benefits, tradeoffs, risks, and validation implications.
    - Recommend an approach and state the reasoning without treating it as approved.
    - Use a Mermaid diagram when it materially improves understanding of architecture, data flow, state transitions, user flow, ownership boundaries, or dependencies. Do not add diagrams as decoration.
-   - When discussing interface or user-experience design, consider whether visual comparison would materially improve the decision. If it would, offer to create a small set of lightweight HTML mockups with distinct design variants and open them in a browser for review.
-   - Create HTML mockups only after the user agrees. Keep them explicitly disposable and limited to exploring the current design decision; do not treat them as production code, a component implementation, or permission to expand scope.
+   - When a visualization, concept, or comparison would materially improve the decision, offer to create a lightweight HTML page or small set of HTML variants and open them in a browser for review. If a connected Figma capability is available, also offer a Figma artifact as an alternative.
+   - Create the selected visual artifact only after the user agrees. Keep it explicitly disposable and limited to exploring the current design decision; do not treat it as production code, a component implementation, or permission to expand scope.
 
 4. Present the design.
    - Present a concise, decision-ready design with these sections:
