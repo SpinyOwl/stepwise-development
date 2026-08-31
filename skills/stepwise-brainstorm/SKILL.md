@@ -9,6 +9,10 @@ description: Explore and converge on a software design before planning. Use when
 
 Turn an ambiguous or high-impact request into an approved design and a reviewed Stepwise plan without implementing code. Conversation-only design work is the default; persist brainstorm artifacts only when the user explicitly approves them. After design approval, invoke the `stepwise-planner` skill in the current context rather than delegating to a named planner agent; require another approval only if the planning brief introduces a new material decision.
 
+Keep semantic design decisions in the approved brief and authoritative Markdown
+artifacts. Do not copy private reasoning or vendor-specific orchestration into
+the brief.
+
 ## Golden Rule: YAGNI
 
 Apply YAGNI (You Aren't Gonna Need It) as the default scope and design
@@ -34,8 +38,8 @@ Before exploring project context:
 
 1. Read the project's `AGENTS.md` or equivalent instruction file.
 2. Read `docs/README.md` when it exists.
-3. Read `docs/folder-structure.md` when it exists, or the installed shared
-   `folder-structure.md` beside this skill.
+3. Read `docs/folder-structure.md` when it exists; otherwise read the bundled
+   `references/folder-structure.md` in this skill.
 4. Follow the relevant section index and explicit document links only. Do not
    scan every document under `docs/`.
 

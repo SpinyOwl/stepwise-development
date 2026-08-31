@@ -21,6 +21,18 @@ Each adapter must be standalone after installation, so copy the canonical
 prompt into its prompt body. Keep behavioral differences out of adapters unless
 a platform cannot express the same behavior.
 
+## Durable Markdown Handoffs
+
+Canonical Stepwise roles use authoritative task documents and their Execution
+Records as bounded cross-session handoffs. Delegated prompts add only assigned
+IDs, repository-relative paths, and immediate deltas. Handoffs do not carry
+full conversations, raw evidence, private reasoning, or implementation traces.
+
+Reviewer evidence is input, not an acceptance verdict. Reviewers inspect the
+current diff when the host provides a read-only route; otherwise they report
+the capability gap and require manager verification of current-diff identity.
+This documents portable behavior only and does not claim native-host discovery.
+
 ## Adapters
 
 | File | Format | Installation |
@@ -29,8 +41,8 @@ a platform cannot express the same behavior.
 | `codex.toml` | TOML with `developer_instructions` | `.codex/agents/<name>.toml` or `~/.codex/agents/<name>.toml` |
 | `claude.md` | YAML frontmatter and Markdown | `.claude/agents/<name>.md` or `~/.claude/agents/<name>.md` |
 
-See [installation instructions](INSTALL.md) for local-wrapper and native-link
-installation options across OpenCode, Codex, Claude Code, and other tools.
+See [installation instructions](INSTALL.md) for native definition installation
+across OpenCode, Codex, Claude Code, and other tools.
 See [uninstallation instructions](UNINSTALL.md) for removing installed agents
 and skills without deleting repository source files.
 
@@ -58,7 +70,12 @@ The Stepwise agents migrated from OpenCode use model-neutral role names:
 | `s-reviewer` | `s-reviewer` |
 | `s-implementer` | `s-implementer` |
 
-Install the Stepwise OpenCode adapters needed for the intended workflow. The
+All five packages include `prompt.md`, `opencode.md`, `codex.toml`, and
+`claude.md`. The Claude adapter uses the documented `.claude/agents/`
+destination and is fixture-validated; manually confirm host discovery before
+reporting a native installation as working.
+
+Install the Stepwise adapters needed for the intended workflow. The
 manager adapter delegates code changes to `s-implementer` and may delegate
 independent review to `s-reviewer`. `s-planner` remains available as an
 optional standalone planning agent; `s-brainstormer` invokes the

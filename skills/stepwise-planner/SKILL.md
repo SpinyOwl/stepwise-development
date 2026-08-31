@@ -7,7 +7,7 @@ description: Create markdown plans for software projects, using dependency graph
 
 ## Outcome
 
-Produce a markdown plan that matches the requested planning level and lets the next engineer or agent act without guessing the intended scope.
+Produce a markdown plan that matches the requested planning level and lets the next engineer or agent act without guessing the intended scope. Give every standalone executable task, and every inline task prepared for immediate handoff, the bounded `Execution Record` defined by the shared folder convention. Keep Markdown authoritative for scope, dependencies, acceptance checks, material decisions, and current handoff state; do not embed raw evidence, private traces, or vendor-specific orchestration logic.
 
 ## Planning Root Compatibility
 
@@ -19,6 +19,15 @@ apply relative to that resolved planning root.
 - Phase documents consist of stable-ID `T<N>` implementation tasks, not steps.
 - Low-level plans divide a phase, feature, fix, or refactor into small implementation tasks that can be reviewed and verified independently; they are not dependency graphs by default.
 - High-level `Depends on` fields are authoritative. High-level Mermaid diagrams are derived views, and parallelism metadata is optional.
+
+## Optional Graph Discovery
+
+During repository discovery, read and apply the package-local
+[Optional Graph Discovery Policy](references/optional-graph-discovery.md).
+Graphify remains an optional candidate locator. If the policy or an already
+available permitted index cannot be used, skip Graphify and inspect the
+repository directly; planning scope, dependencies, decisions, and evidence
+still come only from authoritative sources.
 
 ## Choose the Planning Level
 
@@ -54,8 +63,19 @@ If the requested level is unclear, infer from scale:
    - When planning inside a phase, represent the phase's contents as `T<N>` tasks.
    - For low-level planning, slice the work into small reviewable implementation tasks with stable `T<N>` IDs.
    - Keep a single straightforward outcome as one concise task; do not invent extra tasks or a dependency graph merely to make the plan look substantial.
-   - For every high-level `E<N>`, `M<N>`, or `P<N>` node, include `Depends on`; use `None` when no dependency exists. Add `Parallelizable with` only when it communicates useful, safely established parallelism. Do not require `Enables`; when legacy or repository-local plans include it, treat it as a derived reverse view that cannot override `Depends on`.
+- For every high-level `E<N>`, `M<N>`, or `P<N>` node, include `Depends on`; use `None` when no dependency exists. Add `Parallelizable with` only when it communicates useful, safely established parallelism. Do not require `Enables`; when legacy or repository-local plans include it, treat it as a derived reverse view that cannot override `Depends on`.
+- For every generated high-level document, include mandatory document metadata in `Document Context`: `Status` and `Dependencies`, with `Dependencies` reflecting `Depends on`.
    - For every low-level `T<N>` task, include `Purpose`, `Changes`, `Acceptance Checks`, and `Risks`. Add `Prerequisites` only for a hard dependency or readiness condition.
+   - A merely planned inline task may omit `Execution Record`. Add the record
+     before immediate execution or delegation. When the task needs independent
+     writer ownership or an isolated cross-session handoff, extract it lazily
+     to `<parent-id>/T<N> - <name>.md`, move rather than copy its intent fields,
+     and leave one link at the former inline location.
+   - Every standalone executable task document must contain the exact ordered
+     `Execution Record` field set from the shared folder convention. Initialize
+     it with `Status: Planned`, `Implemented Scope: None`, `Relevant Files and
+     Symbols: None`, `Review Outcome: Not Reviewed`, and a specific planned
+     resume action. Do not invent execution results or evidence.
    - Tolerate legacy `Depends on`, `Enables`, and `Parallelizable with` fields in existing low-level plans. Interpret legacy task-level `Depends on` as prerequisite information and the other fields as advisory; do not rewrite them solely for format conformity.
    - Avoid speculative foundations unless a later listed milestone, phase, or task directly consumes them.
 
@@ -74,6 +94,9 @@ If the requested level is unclear, infer from scale:
    - End high-level documents that plan relationships among `E<N>`, `M<N>`, or `P<N>` nodes with a Mermaid `flowchart TD` dependency visualization derived from authoritative `Depends on` fields.
    - Do not add a Mermaid dependency graph to a low-level plan merely because it contains multiple tasks. Include one only when the user or a stronger repository convention explicitly requires it.
    - Include a `Document Context` section in every generated planning document.
+   - Keep task intent outside `Execution Record`. The record summarizes current
+     execution and handoff state and never replaces `Purpose`, `Changes`,
+     `Acceptance Checks`, or `Risks`.
    - Do not include motivational prose, project-management filler, or implementation details that belong in code comments.
 
 ## High-Level Planning Template
@@ -92,6 +115,8 @@ Document hierarchy (under the resolved planning root):
 - `<planning-root>\E1\M1\P1\T1 - Task name.md`
 
 ## Document Context
+- Status: <Planned|In Progress|Blocked|Completed>
+- Dependencies: <None, or IDs from parent/required high-level nodes>
 - Parent: <Link to the parent document, or None>
 - Children: <Links to child documents when applicable, or None>
 - Related: <Links to required architecture or decision documents, or None>
@@ -150,6 +175,8 @@ Use this structure for implementation-task plans unless the repository already h
 # <Plan Title>
 
 ## Document Context
+- Status: <Planned|In Progress|Blocked|Completed>
+- Dependencies: <None, or dependent IDs this phase depends on>
 - Parent: <Link to the parent phase or plan, or None>
 - Children: <Links to separately stored task documents when applicable, or None>
 - Related: <Links to required architecture or decision documents, or None>
@@ -204,6 +231,60 @@ before it can start.
 - <Useful but intentionally postponed work>
 ````
 
+## Standalone Executable Task Template
+
+Use this template when a `T<N>` task is stored separately, or extract an inline
+task to it only when independent writer ownership or an isolated cross-session
+handoff is required. A task that remains merely planned may stay inline.
+
+````markdown
+# T1 - <Small Reviewable Outcome>
+
+## Document Context
+- Status: Planned
+- Dependencies: <None, or dependent IDs the task depends on>
+- Parent: <Link to the parent phase or plan>
+- Children: None
+- Related: <Links to required architecture or decision documents, or None>
+- Next: <Next document to read, or None>
+
+## Purpose
+<Why this task exists.>
+
+## Prerequisites
+<Hard dependencies or readiness conditions. Omit this section when none exist.>
+
+## Changes
+- [ ] <Specific implementation task touching files, APIs, tests, docs, or assets>
+
+## Acceptance Checks
+- [ ] <Build, test, manual check, or review criterion with expected result>
+
+## Risks
+<Risk and mitigation, or "None identified.">
+
+## Execution Record
+
+- Status: Planned
+- Last Updated: <YYYY-MM-DD>
+- Implemented Scope: None
+- Relevant Files and Symbols: None
+- Acceptance Evidence:
+  - <Exact Acceptance Checks checkbox text>: Not Run — <Automated | Simulated Host | Native Host | Browser | Manual | Documentation> — <planned command or evidence source>
+- Decisions and Deviations: None
+- Review Outcome: Not Reviewed — pending execution and review
+- Remaining Work: <Specific planned task scope>
+- Resume or Closure: Resume by <exact first safe action>
+````
+
+Before changing this template to `Completed`, mark each completed `Changes`
+and `Acceptance Checks` item checked. Keep an accepted inapplicable or deviated
+item visibly unchecked, preserve its exact intent text, and identify it in
+`Decisions and Deviations` for a change or in `Acceptance Evidence` for an
+acceptance check, with the accepted `Not Applicable` or deviation reason and
+approval/decision reference. No unexplained actionable checkbox may remain
+unchecked in a completed task.
+
 ## High-Level Quality Rules
 
 - Prefer architectural propositions, decision points, tradeoffs, and questions over premature implementation tasks.
@@ -233,6 +314,28 @@ before it can start.
 - Do not manufacture task-level dependency metadata or Mermaid graphs. Multiple `T<N>` tasks alone do not imply a graph.
 - Accept legacy task-level `Depends on`, `Enables`, and `Parallelizable with` metadata when reviewing or extending existing plans. Treat legacy `Depends on` as prerequisites and the other fields as advisory.
 - Include expected code or artifact changes, tests, build commands, manual checks, or inspection criteria.
+- Give every separately stored executable task the exact ordered `Execution
+  Record` field set from the shared folder convention. Add the same record to
+  an inline task only when it is prepared for immediate execution and does not
+  require extraction.
+- Keep `Execution Record` status to `Planned`, `In Progress`, `Blocked`, or
+  `Completed`; keep evidence status and class to the convention's closed
+  values; and require one evidence entry per acceptance check.
+- Reconcile every actionable checkbox before `Completed`: check completed
+  `Changes` and verified `Acceptance Checks`; keep accepted inapplicable or
+  deviated items unchecked and disposition their exact text in `Decisions and
+  Deviations` or `Acceptance Evidence` without deleting or weakening intent.
+- Reject `Completed` when any acceptance check is `Failed`, `Blocked`, or `Not
+  Run`, when `Not Applicable` lacks an accepted reason, when a blocking review
+  finding is unresolved, when `Review Outcome` is `Not Reviewed` or `Changes
+  Requested`, when remaining work exists, when the closure statement is
+  absent, or when an actionable checkbox remains unchecked without its exact
+  accepted `Not Applicable` or deviation disposition.
+- Exclude conversations, private reasoning, raw logs, full diffs, credentials,
+  environment dumps, vendor sessions, and machine-specific absolute paths from
+  execution records.
+- Keep one authoritative task location. Do not leave copied intent or a second
+  execution record behind after lazy extraction.
 - Include rollback or stop criteria when a task is risky.
 - Avoid tasks that combine unrelated concerns such as API design, storage migration, UI polish, and cleanup.
 - Do not create tasks like "clean up code" unless the cleanup target and verification are explicit.
@@ -275,4 +378,22 @@ Before finalizing the document, check for:
 - Epic, milestone, phase, or task documents outside the resolved planning-root hierarchy.
 - Hidden high-level ordering assumptions that appear only through document order.
 - Low-level task order that is not a sensible recommended execution sequence, or a hard dependency/readiness condition that should be explicit under `Prerequisites`. Do not require `Prerequisites` for ordinary sequencing preferences.
+- A standalone executable task or immediate inline handoff without the exact
+  `Execution Record` fields, allowed values, one evidence entry per acceptance
+  check, and an actionable resume or closure statement.
+- A task marked `Completed` with unmet, unavailable, interrupted, or unverified
+  acceptance evidence; `Review Outcome` set to `Not Reviewed` or `Changes
+  Requested`; unresolved blocking review findings; remaining work; or no
+  closure statement.
+- A task marked `Completed` while an actionable `Changes` or `Acceptance
+  Checks` box remains unchecked without an exact accepted `Not Applicable` or
+  deviation disposition in the corresponding record field.
+- Actionable intent deleted, weakened, or rewritten to conceal incomplete,
+  inapplicable, or deviated work instead of preserving and dispositioning its
+  checkbox.
+- An execution record that duplicates plan intent, acts as a session journal,
+  or embeds conversations, private reasoning, raw logs, full diffs,
+  credentials, or machine-specific paths.
+- An extracted task whose intent or execution record remains duplicated at the
+  former inline location.
 - Unsafe parallelism labels for nodes that share files, public contracts, migrations, or overlapping test surfaces.

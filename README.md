@@ -1,8 +1,15 @@
 # Agentic AI Library
 
-Portable source library for reusable skills, agent configurations, and
-development workflows. OpenCode, Codex, and Claude Code are the primary
-targets, while the source formats remain usable with other agentic AI tools.
+Portable source library for reusable skills, agent configurations, development
+workflows, and authoritative Markdown handoffs. OpenCode, Codex, and Claude
+Code are the primary targets, while the source formats remain usable with
+other agentic AI tools.
+
+Stepwise is a skills-only, file-first workflow library. It does not require a
+Stepwise runtime, CLI, persisted runtime state, or generated index. Project
+documents, the repository, Git, and current verification evidence remain the
+authoritative sources for continuing work across agent sessions. The current
+product consists only of the definitions and conventions listed below.
 
 ## Layout
 
@@ -63,6 +70,23 @@ For another agentic AI system:
 
 ## Installation
 
+Give a generic agent the self-contained [installation guide](INSTALL.md). The
+supported boundary installs only selected skills and optional custom-agent
+definitions, classifies native destinations, requires narrow approval,
+preserves unrelated files, and re-inspects for no-op convergence.
+
+Installation never opts a repository into the Stepwise workflow. Use the
+separate [activation guide](ACTIVATE.md) only when a repository owner asks to
+add or integrate an explicit Stepwise instruction. Deactivation is an
+instruction change, while uninstallation removes verified installed
+components; neither operation implies the other.
+
+`INSTALL.md` and `ACTIVATE.md` are stable root entrypoints to the canonical
+package-local procedures shipped with `s-setup`. The package contains one
+install/update owner and one workflow opt-in owner, so copied definitions work
+without creating duplicate procedure authorities. Neither operation changes
+unrelated repository-owned legacy data.
+
 ### Skills
 
 Copy or link each complete skill directory into a supported location:
@@ -89,15 +113,18 @@ OpenCode can alternatively load this repository directly with `skills.paths`:
 
 Skills are packages, not just `SKILL.md` files. Install the complete skill
 directory, including `references/`, `templates/`, and any scripts or other
-supporting assets. In particular, install `s-setup` with its project folder
-templates and the shared `conventions/folder-structure.md` asset as described
-in the agent installation guide.
+supporting assets. See the [skill installation guide](skills/INSTALL.md) for
+package boundaries and native destination details inside the canonical
+installation procedure.
+Installing a skill does not activate a target repository.
 
 ### Agents
 
-Use the [agent installation guide](agents/INSTALL.md) to choose a local wrapper
-adapter or a native link. The guide covers OpenCode, Codex, Claude Code, and
-the generic installation pattern for other agentic tools.
+Use the [agent installation guide](agents/INSTALL.md) for native adapter details
+inside the canonical installation procedure. Custom agents are optional
+extensions, and their
+required skills must use the same selected scope. OpenCode, Codex, and Claude
+Code adapters are committed.
 
 When an adapter is installed directly, use the target tool's standard agent
 location:

@@ -3,14 +3,17 @@
 Use the shortest workflow that preserves the decisions and verification the
 change actually needs:
 
-```text
-ambiguous/high-impact request -> s-brainstormer -> approved design -> same-context stepwise-planner skill -> implementation
-well-scoped request or approved task -> direct planning or implementation
-```
+    ambiguous/high-impact request -> stepwise-brainstorm skill -> approved design -> same-context stepwise-planner skill -> implementation
+    well-scoped request or approved task -> direct planning or implementation
+
+Authoritative repository documents hold scope, dependencies, decisions,
+Execution Records, and cross-session handoffs. Host approval and permission
+boundaries remain authoritative for every tool effect.
 
 ## Use Brainstorming
 
-Start `s-brainstormer` when work has one or more of these characteristics:
+Start the stepwise-brainstorm skill when work has one or more of these
+characteristics:
 
 - Materially unclear product or API behavior.
 - Competing architecture or ownership choices.
@@ -18,17 +21,17 @@ Start `s-brainstormer` when work has one or more of these characteristics:
 - Migration, compatibility, security, privacy, or data-loss risk.
 - A user request to brainstorm or compare approaches.
 
-The design must be approved before the brainstormer invokes the
-`stepwise-planner` skill in its existing context rather than delegating
-planning to a separate agent. Reuse the project context already gathered
-during brainstorming rather than reloading it. The brainstormer may prepare
-and self-review the planning brief without a second approval unless it
-introduces a new material decision.
+The design must be approved before the brainstorming workflow invokes the
+stepwise-planner skill in its existing context. Reuse the project context
+already gathered. A separate planning-brief approval is needed only when the
+brief introduces a new material decision.
 
 Brainstorming otherwise remains read-only. Its project-artifact exceptions are
-explicitly user-approved draft or design documents, explicitly user-approved
-mockups, and plan artifacts created by the same-context `stepwise-planner`
-invocation after design approval.
+explicitly approved draft or design documents, approved mockups, and plan
+artifacts created by the same-context planner after design approval.
+
+An installed s-brainstormer custom agent may host this workflow, but it is
+optional. The stepwise-brainstorm skill remains the portable contract.
 
 ## Bypass Brainstorming
 
@@ -38,10 +41,10 @@ or configuration changes, implementation of approved plan tasks, and routine
 Git or file operations.
 
 Ask one focused question instead of starting a full brainstorm when a single
-answer would make the work safe to execute. Do not repeat brainstorming for an
-approved design or plan unless implementation exposes a new material decision.
+answer would make the work safe. Do not repeat brainstorming for an approved
+design or plan unless implementation exposes a new material decision.
 
 ## Navigation
 
-Read `docs/README.md` and follow the relevant document chain before substantive
-work. Do not scan all project documentation.
+Read docs/README.md and follow the smallest relevant document chain before
+substantive work. Do not scan all project documentation.

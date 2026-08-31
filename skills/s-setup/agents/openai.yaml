@@ -1,0 +1,7 @@
+interface:
+  display_name: "Stepwise Setup"
+  short_description: "Follow the sole Stepwise installation guide"
+  default_prompt: "Use $s-setup to follow INSTALL.md for an explicitly requested Stepwise installation or update."
+
+policy:
+  allow_implicit_invocation: false

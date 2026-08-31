@@ -4,6 +4,12 @@ Use this guide to remove Stepwise agents and skills from OpenCode, Codex,
 Claude Code, or another agentic tool without deleting repository source files
 or unrelated user configuration.
 
+Uninstallation is not repository deactivation. Installed components never
+activate a workflow by themselves, and removing them must not edit the
+repository-owned instruction that opted in. Follow the canonical
+[activation procedure](../skills/s-setup/references/activation.md#deactivation-and-uninstallation)
+for a separately approved deactivation change.
+
 ## Safety Rules
 
 Uninstall only tool-local files created for this repository. Do not delete the
@@ -53,16 +59,17 @@ Remove the file from the applicable location:
 
 Do not remove the containing agent directory if it contains other definitions.
 
-## Skills and Shared Assets
+## Skills
 
 When uninstalling the Stepwise skill bundle, remove only the installed
-Stepwise skill directories and `folder-structure.md`. First check whether
-another installed skill or project references the shared convention. If so,
-preserve it and report that it remains in use.
+Stepwise skill directories. Required conventions are bundled inside the
+dependent skill directories; there is no loose shared `folder-structure.md`
+asset to remove.
 
 Do not remove generated project documentation such as `docs/`,
 `docs/folder-structure.md`, or `AGENTS.md` as part of tool uninstallation.
-Those files belong to the project and require a separate user-directed cleanup.
+Those files belong to the project and require a separate user-directed
+deactivation or cleanup approval.
 
 ## Verification
 

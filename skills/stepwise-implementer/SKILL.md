@@ -7,12 +7,21 @@ description: Implement one stable-ID task or high-level plan node, or a manager-
 
 ## Outcome
 
-Implement one selected stable-ID task or high-level plan node by default, or a manager-assigned small batch of tightly related ready work, as a testable and reviewable change. Keep the working tree uncommitted unless the user explicitly asks for a commit.
+Implement one selected stable-ID task or high-level plan node by default, or a manager-assigned small batch of tightly related ready work, as a testable and reviewable change. Keep the working tree uncommitted unless the user explicitly asks for a commit. Persist the implementation result in the assigned task's authoritative Execution Record before responding; the final handoff summarizes that already-recorded state.
 
 ## Planning Root Compatibility
 
 Resolve plan paths using the single planning-root rule in the shared
 `folder-structure` convention; do not apply a separate precedence rule.
+
+## Optional Graph Discovery
+
+During repository discovery, read and apply the package-local
+[Optional Graph Discovery Policy](references/optional-graph-discovery.md).
+Graphify remains an optional candidate locator. If the policy or an already
+available permitted index cannot be used, skip Graphify and inspect the
+repository directly; implementation identity, status, evidence, and completion
+still come only from authoritative sources.
 
 ## Workflow
 
@@ -20,6 +29,9 @@ Resolve plan paths using the single planning-root rule in the shared
    - If the manager provides task document paths, read those documents first and treat them as the assignment source for the selected work.
    - Follow references from the task document instead of relying on duplicated context in the prompt.
    - Read the durable handoff and the Stepwise plan section relevant to the requested task or high-level node ID. Treat detailed context in the durable handoff as authoritative for the assignment; use the delegated prompt only for IDs, paths, and immediate deltas or constraints.
+   - Locate and read the one authoritative Execution Record for every assigned executable task before editing. Verify that it contains the nine required fields in the required order and that its current status, prerequisites, and recorded state are compatible with the assignment. Stop and report the conflict if the record is absent, duplicated, structurally invalid, or contradicts the authoritative task document in a way that prevents safe work.
+   - Treat the task document and its Execution Record as the cross-session source of truth. Do not accept a delegated prompt that attempts to replace durable requirements or previously recorded state; an immediate delta may narrow or clarify the assignment only when it does not contradict the durable handoff.
+   - Keep handoff context reference-first and bounded. Do not copy full conversations, raw evidence, private reasoning, or implementation traces into durable outputs.
    - For high-level work, recognize `E<N>` as epic IDs, `M<N>` as milestone IDs, and `P<N>` as phase IDs.
    - For phase work, treat child work units as stable-ID `T<N>` tasks, not steps or graph nodes by default.
    - When the assigned epic, milestone, or phase is stored in its own document, expect `{identifier} - {name}.md` filename format.
@@ -48,6 +60,7 @@ Resolve plan paths using the single planning-root rule in the shared
    - Avoid opportunistic refactors, speculative abstractions, unrelated formatting churn, or cleanup outside the assigned work.
 
 4. Implement the assigned work.
+   - Take writer ownership of the assigned task's implementation-owned Execution Record fields for this turn. Set `Status` to `In Progress` and refresh `Last Updated` before or with the first durable implementation update. Sequential work transfers this ownership between agents; parallel implementers must have separate task records and must never write the same record concurrently.
    - Prefer small vertical changes that leave the project compiling and behavior coherent.
    - Follow existing patterns, naming, tests, and dependency choices in the repository.
    - Preserve unrelated user changes. If they affect the same files, read them carefully and work with them rather than reverting them.
@@ -55,12 +68,18 @@ Resolve plan paths using the single planning-root rule in the shared
    - If the plan contains markdown checkboxes for the assigned work, update those checkbox items when the corresponding implementation tasks and acceptance checks are completed.
    - Mark only work actually completed in this turn as checked (`- [x]`). Leave skipped, blocked, deferred, or unverified items unchecked.
    - Do not update checkboxes for other work items, manager-only review tasks, or work completed by a different agent.
+   - Add or refresh mandatory code documentation for every changed class, method, and class field that is part of the public contract or implementation boundary for this assignment.
+   - For class fields, include purpose, ownership/invariant, and lifecycle where applicable.
+   - If the repository already uses comment style standards (for example JSDoc/Javadoc/XML comments), follow that style and keep language consistent.
+   - Keep the record current as material facts change: summarize implemented scope; name relevant files and symbols with portable repository-relative references; record acceptance evidence by check with its evidence status and class; capture bounded decisions or deviations; and maintain exact remaining work plus the resume instruction. Do not copy conversations, raw logs, private reasoning, full diffs, secrets, or machine-specific absolute paths into the record.
+   - Do not write the manager-owned acceptance or review disposition. Leave `Review Outcome` as `Not Reviewed` while awaiting manager review, and do not set the task `Status` to `Completed` solely because implementation and focused verification finished.
 
 5. Verify the assigned work.
    - Run the narrowest meaningful automated checks for the changed area.
    - Run broader checks when the assigned work affects shared contracts, build configuration, module boundaries, or integration behavior.
    - If a check is impractical, unavailable, or blocked, state that clearly and explain why.
    - Identify manual tests when they are useful, when UI/runtime behavior changed, or when automated coverage is incomplete.
+   - Map every acceptance check to durable evidence in the Execution Record. Use only the allowed evidence statuses and evidence classes, and record failed, blocked, or not-run checks explicitly rather than implying success from adjacent tests.
 
 6. Review the implemented code against the plan.
    - Re-read the assigned tasks or high-level nodes, their acceptance checks, authoritative dependencies or hard prerequisites, and the repository instructions or architecture constraints that governed the change.
@@ -68,11 +87,14 @@ Resolve plan paths using the single planning-root rule in the shared
    - Compare the implementation to the stated requirements. Verify behavior, tests, public APIs, module boundaries, serialization/persistence contracts, dependency direction, and error handling as relevant to the assigned work.
    - Treat this as a code-review pass, not a rewrite pass. Fix clear defects, requirement gaps, or plan-alignment issues discovered during review; leave unrelated improvements as follow-up notes.
    - If the review finds an assigned item cannot meet the plan as written, stop and report the conflict or blocker instead of marking it complete.
+   - Verify that all changed classes, public methods, and class fields have updated or added documentation and that it matches observed implementation behavior.
+   - After inspecting the final diff, persist the final implementation state before responding. Record verified scope and evidence, unresolved evidence gaps, decisions or deviations, relevant files and symbols, remaining work, and the exact resume point. Use `Blocked` only for a genuine implementation blocker; otherwise leave `Status` as `In Progress` pending manager acceptance.
 
 7. Stop after the assigned item or batch.
    - Do not start work beyond the assigned item or batch in the same turn.
    - Do not commit, stage, push, or create a pull request unless explicitly requested.
    - If you updated plan checkboxes, include the plan document in the same uncommitted change set and summarize which boxes were checked.
+   - Do not send the final response until the authoritative Execution Record reflects the current result. A conversational handoff cannot substitute for the persisted record.
 
 ## Output Markers
 
@@ -93,9 +115,10 @@ Keep task IDs, markdown checkboxes, commands, filenames, code, and Mermaid diagr
 
 ## Final Response
 
-Report the result concisely using this handoff format:
+Report the result concisely as a summary of the already-persisted Execution Record using this handoff format:
 
 - The tasks or high-level nodes implemented, including IDs when present.
+- The authoritative Execution Record path and its persisted status.
 - The behavior or code changed, with key file references.
 - Plan checkboxes marked complete for the assigned work, if any.
 - Code-review alignment result, including any issues found and fixed, or "Review found no plan-alignment issues."
@@ -115,11 +138,15 @@ When reporting to `stepwise-manager`, include this explicit packet:
 - Tests not run:
 - Plan checkboxes updated:
 - Risks/blockers:
+- Execution record path/status:
 
 ## Quality Rules
 
 - Treat plan acceptance checks as requirements, not suggestions.
+- Persist the assigned task's current implementation state before every final response; never leave the only authoritative result in chat.
+- Respect field ownership: the implementer writes implementation scope, evidence, deviations, relevant files and symbols, remaining work, and resume or closure; the manager owns acceptance and review disposition.
 - Keep the diff easy to review.
 - Prefer explicit validation and clear failure messages where the repository style supports them.
 - Do not expose internal storage, mutable globals, or implementation details through public APIs unless the assigned work requires it.
 - If an assigned item or batch is too large to review safely, split it into a smaller first implementation slice and explain the split before continuing.
+- Treat documentation of changed classes, methods, and class fields as mandatory in implementer tasks where code is introduced or behavior is changed.

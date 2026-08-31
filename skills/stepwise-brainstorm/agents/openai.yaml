@@ -1,0 +1,4 @@
+interface:
+  display_name: "Stepwise Brainstorm"
+  short_description: "Explore and approve a design before planning"
+  default_prompt: "Use $stepwise-brainstorm to compare approaches, reach design approval, and produce a reviewed Stepwise plan."

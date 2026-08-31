@@ -27,6 +27,12 @@ Write descriptions with concrete trigger terms. Keep scripts, references, and
 other required assets inside the same skill directory so the package remains
 portable.
 
+The supported Stepwise packages are `s-setup`, `stepwise-brainstorm`,
+`stepwise-planner`, `stepwise-implementer`, and `stepwise-manager`. Each package
+is independently selectable unless an optional agent adds a dependency through
+the installation guide. Repository Markdown remains authoritative for plans,
+decisions, and cross-session handoffs.
+
 Keep standard frontmatter limited to `name`, `description`, `license`,
 `compatibility`, and string-valued `metadata`. Vendor-specific fields may be
 ignored by other tools; use them only when needed and document the reduced
@@ -40,4 +46,5 @@ Recommended cross-tool installation locations:
 | Codex | `.agents/skills/` | `~/.agents/skills/` |
 | Claude Code | `.claude/skills/` | `~/.claude/skills/` |
 
-Start from `templates/skill-template.md`.
+See [INSTALL.md](INSTALL.md) for conflict-safe link and copy instructions.
+Start new skills from `templates/skill-template.md`.

@@ -6,7 +6,7 @@ Thumbs.db
 *.swp
 *~
 
-# Local secrets and runtime state
+# Local secrets and temporary state
 .env
 .env.*
 !.env.example

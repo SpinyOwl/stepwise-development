@@ -13,11 +13,14 @@ Do not scan all files under `docs/`.
 
 ## Default Development Workflow
 
-Use `s-brainstormer` before planning or implementation when the request has
-materially unclear product behavior, competing architecture choices, broad or
-uncertain scope, migration or compatibility risk, or other decisions that need
-user agreement. Also use it whenever the user explicitly asks to brainstorm or
-compare approaches.
+Use the `stepwise-brainstorm` skill before planning or implementation when the
+request has materially unclear product behavior, competing architecture
+choices, broad or uncertain scope, migration or compatibility risk, or other
+decisions that need user agreement. Also use it whenever the user explicitly
+asks to brainstorm or compare approaches.
+
+When a custom `s-brainstormer` agent is installed, it may host this skill. The
+skill is the portable workflow contract; the custom agent is optional.
 
 Proceed directly when the request is well scoped and the intended behavior is
 clear. This includes focused bug fixes, small refactors, localized
@@ -33,7 +36,7 @@ when requested.
 Choose the shortest responsible path:
 
 ```text
-ambiguous/high-impact request -> s-brainstormer -> approved design -> same-context stepwise-planner skill -> implementation
+ambiguous/high-impact request -> stepwise-brainstorm skill -> approved design -> same-context stepwise-planner skill -> implementation
 well-scoped request or approved task -> direct planning or implementation
 ```
 
@@ -45,6 +48,6 @@ draft, design, or mockup artifacts and plan artifacts created by the planner
 skill after design approval.
 
 Do not repeat brainstorming for work that already has an approved design or
-plan unless implementation exposes a new material decision. If brainstorming
-is warranted but `s-brainstormer` is unavailable, briefly explain the missing
+plan unless implementation exposes a new material decision. If the
+`stepwise-brainstorm` skill is unavailable, briefly explain the missing
 capability and ask whether to proceed with focused clarification instead.
