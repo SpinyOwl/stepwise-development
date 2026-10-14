@@ -21,6 +21,24 @@ Each adapter must be standalone after installation, so copy the canonical
 prompt into its prompt body. Keep behavioral differences out of adapters unless
 a platform cannot express the same behavior.
 
+## Adapter Contract
+
+A new host needs one standalone adapter file in its native agent format. It
+contains:
+
+- the agent name and description from the package;
+- the complete `prompt.md` body, copied unchanged;
+- the host's native controls for the semantic requirements below, or an
+  explicit statement of any requirement the host cannot express.
+
+Semantic requirements: a reviewer is read-only; a manager may delegate only to
+the implementer and the reviewer; an implementer may edit files but never
+commits. Use an inherited model unless a pinned one is required and testable.
+
+An adapter must not add behavior absent from `prompt.md`, be translated from
+another host's adapter, or contain credentials or machine-specific paths.
+Parity means its body equals `prompt.md`.
+
 ## Durable Markdown Handoffs
 
 Canonical Stepwise roles use authoritative task documents and their Execution

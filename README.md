@@ -81,15 +81,18 @@ add or integrate an explicit Stepwise instruction. Deactivation is an
 instruction change, while uninstallation removes verified installed
 components; neither operation implies the other.
 
-`INSTALL.md` and `ACTIVATE.md` are stable root entrypoints to the canonical
-package-local procedures shipped with `s-setup`. The package contains one
-install/update owner and one workflow opt-in owner, so copied definitions work
-without creating duplicate procedure authorities. Neither operation changes
+`INSTALL.md` is the only installation, update, and removal procedure. It is a
+root document so it works before any skill is installed. `ACTIVATE.md` is a
+stable root entrypoint to the activation procedure shipped with the `sw-setup`
+skill, which covers repository activation only. Neither operation changes
 unrelated repository-owned legacy data.
 
 ### Skills
 
-Copy or link each complete skill directory into a supported location:
+Copy or link each complete skill directory into the host's native skill
+directory. The host agent determines that location itself (see the
+[installation procedure](INSTALL.md)); these are
+known hosts:
 
 | Tool | Project | User |
 | --- | --- | --- |
@@ -115,7 +118,7 @@ Skills are packages, not just `SKILL.md` files. Install the complete skill
 directory, including `references/`, `templates/`, and any scripts or other
 supporting assets. See the [skill installation guide](skills/INSTALL.md) for
 package boundaries and native destination details inside the canonical
-installation procedure.
+[installation procedure](INSTALL.md).
 Installing a skill does not activate a target repository.
 
 ### Agents

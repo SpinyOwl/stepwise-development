@@ -77,7 +77,7 @@ declared documentation root in place of `docs/`):
     <resolved-planning-root>/
       README.md
 
-Use assets under the installed `s-setup/templates/` directory. Copy the
+Use assets under the installed `sw-setup/templates/` directory. Copy the
 resolved convention to `docs/folder-structure.md` only when absent. Replace
 placeholders with paths relative to the target file. Create only approved
 missing files and preserve every existing file.
@@ -107,4 +107,4 @@ and documentation.
 
 Uninstallation removes separately verified installed definitions. It does not
 deactivate or delete repository-owned instructions automatically. Follow the
-[installation procedure](installation.md).
+[installation procedure](../../../INSTALL.md).

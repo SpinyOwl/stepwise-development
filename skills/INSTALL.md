@@ -1,7 +1,7 @@
 # Skill Installation
 
 This is the skill package reference for the canonical
-[installation procedure](s-setup/references/installation.md). It does not authorize an independent
+[installation procedure](../INSTALL.md). It does not authorize an independent
 installation or update.
 
 Install each selected skill as its complete directory. Do not publish only
@@ -10,23 +10,27 @@ package.
 
 The supported workflow bundle contains:
 
-    s-setup
+    sw-setup
     sw-brainstorm
     sw-implementer
     sw-manager
     sw-planner
 
-Skills formerly named `stepwise-*` are now `sw-*`; follow the migration
-section of the canonical [installation procedure](s-setup/references/installation.md#migration-from-stepwise--skill-names).
+Skills formerly named `stepwise-*` or `s-setup` are now `sw-*`; follow the migration
+section of the canonical [installation procedure](../INSTALL.md#migration-from-former-skill-names).
 
 Each skill is independently selectable. Agent selections may add required
 skills through the dependency table in the canonical
-[installation procedure](s-setup/references/installation.md). Discoverable skills do
+[installation procedure](../INSTALL.md). Discoverable skills do
 not activate a repository; activation requires the separately approved
 instruction change in the canonical
-[activation procedure](s-setup/references/activation.md).
+[activation procedure](sw-setup/references/activation.md).
 
 ## Native Locations
+
+The host agent determines its own locations as described in section 3 of the
+canonical [installation procedure](../INSTALL.md). The
+table lists known hosts as a verification aid, not a limit.
 
 | Host | Project | User |
 | --- | --- | --- |

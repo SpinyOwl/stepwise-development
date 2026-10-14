@@ -7,7 +7,7 @@ or unrelated user configuration.
 Uninstallation is not repository deactivation. Installed components never
 activate a workflow by themselves, and removing them must not edit the
 repository-owned instruction that opted in. Follow the canonical
-[activation procedure](../skills/s-setup/references/activation.md#deactivation-and-uninstallation)
+[activation procedure](../skills/sw-setup/references/activation.md#deactivation-and-uninstallation)
 for a separately approved deactivation change.
 
 ## Safety Rules
@@ -56,6 +56,10 @@ Remove the file from the applicable location:
 | OpenCode | `.opencode/agents/<name>.md` | `~/.config/opencode/agents/<name>.md` |
 | Codex | `.codex/agents/<name>.toml` | `~/.codex/agents/<name>.toml` |
 | Claude Code | `.claude/agents/<name>.md` | `~/.claude/agents/<name>.md` |
+
+For a host not listed, resolve its locations with the evidence rules in section
+3 of the canonical
+[installation procedure](../INSTALL.md).
 
 Do not remove the containing agent directory if it contains other definitions.
 

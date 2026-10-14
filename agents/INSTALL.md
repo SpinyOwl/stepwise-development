@@ -1,13 +1,16 @@
 # Agent Installation
 
 This is the native-adapter reference for the canonical
-[installation procedure](../skills/s-setup/references/installation.md), not an independent installation or
+[installation procedure](../INSTALL.md), not an independent installation or
 update. Custom agents are optional; a valid Stepwise installation may contain
 none. Publishing an agent definition does not activate a repository.
 
 ## Available Adapters
 
-Each agent directory contains a canonical prompt.md plus native adapters:
+Each agent directory contains a canonical prompt.md plus native adapters for the
+hosts listed here. A host not listed installs skills only unless the user
+approves a drafted adapter; see the canonical procedure and the adapter
+contract in [README.md](README.md#adapter-contract).
 
 | Host | Source adapter | Project destination | User destination |
 | --- | --- | --- | --- |
@@ -23,7 +26,8 @@ The available optional agents are:
     s-planner
     s-reviewer
 
-Install only the adapter matching the selected host. The canonical prompt is
+Install only the adapter matching the host, using the destinations resolved and
+confirmed in the canonical procedure. The canonical prompt is
 the parity source, not a separately installed component.
 
 ## Dependencies
@@ -56,7 +60,7 @@ behavior. Host approval and permission boundaries remain authoritative.
 ## Inspect, Publish, and Verify
 
 Follow the canonical
-[installation procedure](../skills/s-setup/references/installation.md):
+[installation procedure](../INSTALL.md):
 
 1. inspect the selected source adapter and every discovered destination;
 2. classify exact copies, conflicts, and missing definitions;
@@ -71,5 +75,5 @@ Do not overwrite a different definition or retarget a link automatically.
 Report every created, updated, preserved, skipped, and conflicting path.
 Activation, deactivation, and uninstallation remain separately approved
 operations; see the canonical
-[activation procedure](../skills/s-setup/references/activation.md) and
+[activation procedure](../skills/sw-setup/references/activation.md) and
 [UNINSTALL.md](UNINSTALL.md).

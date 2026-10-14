@@ -27,7 +27,7 @@ Write descriptions with concrete trigger terms. Keep scripts, references, and
 other required assets inside the same skill directory so the package remains
 portable.
 
-The supported Stepwise packages are `s-setup`, `sw-brainstorm`,
+The supported Stepwise packages are `sw-setup`, `sw-brainstorm`,
 `sw-planner`, `sw-implementer`, and `sw-manager`. Each package
 is independently selectable unless an optional agent adds a dependency through
 the installation guide. Repository Markdown remains authoritative for plans,

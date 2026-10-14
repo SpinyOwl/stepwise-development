@@ -1,0 +1,7 @@
+interface:
+  display_name: "Stepwise Setup"
+  short_description: "Activate Stepwise in a repository"
+  default_prompt: "Use $sw-setup to follow the activation procedure for an explicitly requested Stepwise repository activation or deactivation."
+
+policy:
+  allow_implicit_invocation: false
