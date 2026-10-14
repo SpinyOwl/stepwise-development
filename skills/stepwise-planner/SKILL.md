@@ -7,12 +7,15 @@ description: Create markdown plans for software projects, using dependency graph
 
 ## Outcome
 
-Produce a markdown plan that matches the requested planning level and lets the next engineer or agent act without guessing the intended scope. Give every standalone executable task, and every inline task prepared for immediate handoff, the bounded `Execution Record` defined by the shared folder convention. Keep Markdown authoritative for scope, dependencies, acceptance checks, material decisions, and current handoff state; do not embed raw evidence, private traces, or vendor-specific orchestration logic.
+Produce a markdown plan that matches the requested planning level and lets the next engineer or agent act without guessing the intended scope. In the default `full` profile, when a phase has three or more tasks, create one standalone document per task; keep task intent and its bounded `Execution Record` there, and keep the phase document to phase-level navigation and state. Give every other standalone executable task, and every inline task prepared for immediate handoff, the bounded `Execution Record` defined by the shared folder convention. Keep Markdown authoritative for scope, dependencies, acceptance checks, material decisions, and current handoff state; do not embed raw evidence, private traces, or vendor-specific orchestration logic.
 
 ## Planning Root Compatibility
 
 Resolve plan paths using the single planning-root rule in the shared
-`folder-structure` convention. The hierarchy and filename examples below
+`folder-structure` convention, which uses a planning root declared in the
+repository instruction file before scanning candidates. Read the declared
+documentation index first and honor the declared `Profile` and `Decision log`.
+Write artifacts and reply in chat in the languages set by the shared convention's language rule. The hierarchy and filename examples below
 apply relative to that resolved planning root.
 
 - High-level plans define epics, milestones, or phases as dependency graph nodes with architectural propositions, decisions, questions, risks, and validation points.
@@ -52,6 +55,10 @@ If the requested level is unclear, infer from scale:
    - State the goal in one paragraph.
    - State explicit non-goals when they prevent speculative scope.
    - List assumptions and unknowns. Ask only for unknowns that would materially change the plan.
+   - Apply clean-code priorities in this order: KISS, YAGNI, DRY, then SOLID.
+     Plan the simplest current solution; consolidate only real, current
+     duplication; use SOLID to assess necessary boundaries without prescribing
+     interfaces, layers, or abstractions that the task does not need.
 
 3. Build the plan at the chosen level.
    - Assign every epic, milestone, phase, or task a stable ID.
@@ -64,18 +71,17 @@ If the requested level is unclear, infer from scale:
    - For low-level planning, slice the work into small reviewable implementation tasks with stable `T<N>` IDs.
    - Keep a single straightforward outcome as one concise task; do not invent extra tasks or a dependency graph merely to make the plan look substantial.
 - For every high-level `E<N>`, `M<N>`, or `P<N>` node, include `Depends on`; use `None` when no dependency exists. Add `Parallelizable with` only when it communicates useful, safely established parallelism. Do not require `Enables`; when legacy or repository-local plans include it, treat it as a derived reverse view that cannot override `Depends on`.
-- For every generated high-level document, include mandatory document metadata in `Document Context`: `Status` and `Dependencies`, with `Dependencies` reflecting `Depends on`.
+- For every generated high-level document, include mandatory document metadata in `Document Context`: `Status` and `Dependencies`, with `Dependencies` reflecting `Depends on` (under `Frontmatter: on`, the frontmatter `status` and `depends_on`).
    - For every low-level `T<N>` task, include `Purpose`, `Changes`, `Acceptance Checks`, and `Risks`. Add `Prerequisites` only for a hard dependency or readiness condition.
-   - A merely planned inline task may omit `Execution Record`. Add the record
-     before immediate execution or delegation. When the task needs independent
-     writer ownership or an isolated cross-session handoff, extract it lazily
-     to `<parent-id>/T<N> - <name>.md`, move rather than copy its intent fields,
-     and leave one link at the former inline location.
+   - Under the declared `light` profile, a phase with three or more tasks may keep its tasks inline, and each inline executable task carries its own full `Execution Record` beneath it.
+   - Under the default `full` profile, when a phase has three or more `T<N>` tasks, create every task as a standalone document at planning time under `<phase-id>/T<N> - <name>.md`. Put its `Purpose`, optional `Prerequisites`, `Changes`, `Acceptance Checks`, `Risks`, and `Execution Record` only in that task document. In the phase document, keep an ordered link-only task index, list every task document in `Children`, and record only phase-level status, progress, blockers, and decisions; the index checkbox is the only per-task state allowed there, set by the manager on acceptance. If a phase later reaches three tasks, extract the remaining inline tasks first.
+   - In a phase with one or two tasks (any profile), a merely planned inline task may omit `Execution Record`. Add the record before immediate execution or delegation. When the task needs independent writer ownership or an isolated cross-session handoff, extract it lazily to `<parent-id>/T<N> - <name>.md`, move rather than copy its intent fields, and leave one link at the former inline location.
    - Every standalone executable task document must contain the exact ordered
      `Execution Record` field set from the shared folder convention. Initialize
      it with `Status: Planned`, `Implemented Scope: None`, `Relevant Files and
      Symbols: None`, `Review Outcome: Not Reviewed`, and a specific planned
      resume action. Do not invent execution results or evidence.
+   - When a decision log is declared, treat each entry not marked superseded, rejected, or proposed as a confirmed constraint and cite it by identifier in the `Related` field. Label any new decision you introduce `Proposed` in the document that introduces it until the user confirms it; do not edit the log without the user's approval.
    - Tolerate legacy `Depends on`, `Enables`, and `Parallelizable with` fields in existing low-level plans. Interpret legacy task-level `Depends on` as prerequisite information and the other fields as advisory; do not rewrite them solely for format conformity.
    - Avoid speculative foundations unless a later listed milestone, phase, or task directly consumes them.
 
@@ -93,7 +99,7 @@ If the requested level is unclear, infer from scale:
    - Include enough detail for the chosen level, but do not mix high-level roadmap planning with task-level implementation unless the user asks for both.
    - End high-level documents that plan relationships among `E<N>`, `M<N>`, or `P<N>` nodes with a Mermaid `flowchart TD` dependency visualization derived from authoritative `Depends on` fields.
    - Do not add a Mermaid dependency graph to a low-level plan merely because it contains multiple tasks. Include one only when the user or a stronger repository convention explicitly requires it.
-   - Include a `Document Context` section in every generated planning document.
+   - Include a `Document Context` section in every generated planning document. Under `Frontmatter: on`, instead begin every document with the frontmatter block from the shared convention (all keys, in order, `null` or `[]` when empty) and omit `Document Context`, the `Execution Record` fields `Status`, `Last Updated`, and `Review Outcome`, and any other body field the frontmatter now owns. Set `priority`, `assignee`, `labels`, and `areas` only from values the user stated, and use only the values listed under `Allowed Values` in the planning-root index; otherwise leave them empty. List identifiers only in `depends_on` and keep `Prerequisites` for non-identifier readiness conditions.
    - Keep task intent outside `Execution Record`. The record summarizes current
      execution and handoff state and never replaces `Purpose`, `Changes`,
      `Acceptance Checks`, or `Risks`.
@@ -202,6 +208,23 @@ Tasks appear in recommended execution order. A task's optional `Prerequisites`
 lists only hard dependencies or readiness conditions that must be satisfied
 before it can start.
 
+When the phase has three or more tasks, create every task as a standalone
+document and use this section only as an ordered link index. Keep task intent,
+per-task status, implementation details, acceptance evidence, and `Execution
+Record` in the linked task documents.
+
+- [ ] [T1 - <Small Reviewable Outcome>](<P1/T1 - Small Reviewable Outcome.md>)
+- [ ] [T2 - <Small Reviewable Outcome>](<P1/T2 - Small Reviewable Outcome.md>)
+- [ ] [T3 - <Small Reviewable Outcome>](<P1/T3 - Small Reviewable Outcome.md>)
+
+## Phase Implementation State
+
+- Progress: <0/3 task documents completed>
+- Active task or next action: <Task ID and concise state, or None>
+- Phase-level blockers or decisions: <None, or concise roll-up only>
+
+For a phase with one or two tasks, use detailed inline task sections instead:
+
 ### T1: <Small Reviewable Outcome>
 **Purpose:** <Why this task exists.>
 
@@ -233,9 +256,10 @@ before it can start.
 
 ## Standalone Executable Task Template
 
-Use this template when a `T<N>` task is stored separately, or extract an inline
-task to it only when independent writer ownership or an isolated cross-session
-handoff is required. A task that remains merely planned may stay inline.
+Use this template for every task in a phase with three or more tasks. For a
+phase with one or two tasks, use it when independent writer ownership or an
+isolated cross-session handoff requires extraction; another merely planned task
+may stay inline.
 
 ````markdown
 # T1 - <Small Reviewable Outcome>
@@ -270,10 +294,14 @@ handoff is required. A task that remains merely planned may stay inline.
 - Implemented Scope: None
 - Relevant Files and Symbols: None
 - Acceptance Evidence:
-  - <Exact Acceptance Checks checkbox text>: Not Run — <Automated | Simulated Host | Native Host | Browser | Manual | Documentation> — <planned command or evidence source>
+
+  | Acceptance Check | Status | Class | Evidence |
+  | --- | --- | --- | --- |
+  | <Exact Acceptance Checks checkbox text> | Not Run | <Automated \| Simulated Host \| Native Host \| Browser \| Manual \| Documentation \| Human Assessment> | <planned command or evidence source> |
 - Decisions and Deviations: None
 - Review Outcome: Not Reviewed — pending execution and review
-- Remaining Work: <Specific planned task scope>
+- Remaining Work:
+  - <Specific planned task scope>
 - Resume or Closure: Resume by <exact first safe action>
 ````
 
@@ -294,10 +322,14 @@ unchecked in a completed task.
 - Give every epic, milestone, and phase a stable ID and an authoritative `Depends on` field.
 - Use only `E<N>` for epics, `M<N>` for milestones, and `P<N>` for phases.
 - Name every epic, milestone, phase, and task document `{identifier} - {name}.md`.
-- Store graph documents under the resolved planning root, normally `docs/plans/`; use an existing `docs/work/` or root-level `work/` only for compatibility.
+- Store graph documents under the resolved planning root, normally `docs/plans/` unless a planning root is declared; use an existing `docs/work/` or root-level `work/` only for compatibility.
 - Treat `Parallelizable with` as optional high-level metadata and include it only when useful and safe; do not require `Enables`.
 - End high-level documents that plan relationships among epic, milestone, or phase nodes with a Mermaid dependency graph derived from `Depends on`.
 - Avoid over-specifying implementation details that belong in a later low-level plan.
+- Prefer the simplest current design over speculative extensibility. Treat DRY
+  as a reason to remove demonstrated duplicated knowledge or behavior, not to
+  manufacture a shared framework; use SOLID only to clarify real
+  responsibilities and dependencies.
 
 ## Low-Level Task Quality Rules
 
@@ -312,6 +344,8 @@ unchecked in a completed task.
 - Treat document order as the recommended execution order when `Prerequisites` is absent. Recommended order does not itself create a hard dependency.
 - Reserve `Prerequisites` for hard dependencies or readiness conditions, not ordinary sequencing preferences.
 - Do not manufacture task-level dependency metadata or Mermaid graphs. Multiple `T<N>` tasks alone do not imply a graph.
+- When a phase has three or more tasks, create every task as a standalone document from the outset. Keep the phase document to the ordered task links and phase-level status, progress, blockers, and decisions; do not duplicate task intent, per-task implementation state, or `Execution Record` there.
+- In a phase with one or two tasks, keep a merely planned task inline unless independent writer ownership or an isolated cross-session handoff requires extraction.
 - Accept legacy task-level `Depends on`, `Enables`, and `Parallelizable with` metadata when reviewing or extending existing plans. Treat legacy `Depends on` as prerequisites and the other fields as advisory.
 - Include expected code or artifact changes, tests, build commands, manual checks, or inspection criteria.
 - Give every separately stored executable task the exact ordered `Execution
@@ -320,7 +354,7 @@ unchecked in a completed task.
   require extraction.
 - Keep `Execution Record` status to `Planned`, `In Progress`, `Blocked`, or
   `Completed`; keep evidence status and class to the convention's closed
-  values; and require one evidence entry per acceptance check.
+  values; and require one evidence row per acceptance check.
 - Reconcile every actionable checkbox before `Completed`: check completed
   `Changes` and verified `Acceptance Checks`; keep accepted inapplicable or
   deviated items unchecked and disposition their exact text in `Decisions and
@@ -344,7 +378,7 @@ unchecked in a completed task.
 
 ## Output Markers
 
-Use emojis sparingly in user-facing headings and result labels, never as decoration or on every bullet:
+Output markers are on by default. Omit all emojis when `Output markers: off` applies under the shared convention (declared `off`, or undeclared with repository instructions asking for plain output). When on, use emojis sparingly in user-facing headings and result labels, never as decoration or on every bullet:
 
 - `📋` plan, scope, or planning brief
 - `🔍` investigation or review
@@ -370,6 +404,11 @@ Before finalizing the document, check for:
 - Missing questions around unresolved architecture, ownership, persistence, compatibility, or runtime behavior.
 - Missing tests around changed contracts, serialization, persistence, or user-visible behavior in low-level plans.
 - Speculative abstractions not required by the stated goal.
+- Unnecessary layers, interfaces, configuration, or task splits that make the
+  current solution harder to understand (KISS/YAGNI), or a proposed shared
+  abstraction without demonstrated duplication (DRY). Check SOLID only after
+  those higher-priority concerns, for a real responsibility or dependency
+  problem.
 - Ordering errors where implementation precedes required contract, data, or architecture decisions.
 - Missing, contradictory, cyclic, or ambiguous high-level `Depends on` fields that prevent safe sequencing.
 - Stale Mermaid edges or nodes: repair them when authoritative `Depends on` fields are clear, or report a warning when repair is outside the current scope. Do not reject a plan for diagram staleness alone.
@@ -379,8 +418,9 @@ Before finalizing the document, check for:
 - Hidden high-level ordering assumptions that appear only through document order.
 - Low-level task order that is not a sensible recommended execution sequence, or a hard dependency/readiness condition that should be explicit under `Prerequisites`. Do not require `Prerequisites` for ordinary sequencing preferences.
 - A standalone executable task or immediate inline handoff without the exact
-  `Execution Record` fields, allowed values, one evidence entry per acceptance
+  `Execution Record` fields, allowed values, one evidence row per acceptance
   check, and an actionable resume or closure statement.
+- Under the `full` profile, a phase with three or more tasks that does not have one standalone document per task, lists detailed task state in the phase document, or lacks a concise phase-level implementation-state roll-up.
 - A task marked `Completed` with unmet, unavailable, interrupted, or unverified
   acceptance evidence; `Review Outcome` set to `Not Reviewed` or `Changes
   Requested`; unresolved blocking review findings; remaining work; or no

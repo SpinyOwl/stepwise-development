@@ -18,12 +18,14 @@ silently.
 
 Locate the shared convention in this order and use the first existing file:
 
-1. `<project-root>/docs/folder-structure.md`;
+1. `<documentation-root>/folder-structure.md` (`docs/` unless the instruction
+   file declares another documentation root);
 2. `<installed-s-setup>/references/folder-structure.md`;
 3. `<source-root>/conventions/folder-structure.md`.
 
-If none exists, stop. Resolve the planning root once through that convention.
-Preserve the existing root and do not create a second planning tree.
+If none exists, stop. Resolve the planning root once through that convention,
+which uses a declared planning root before scanning candidates. Preserve the
+existing root and do not create a second planning tree.
 
 ## 2. Plan the Repository Instruction
 
@@ -35,6 +37,22 @@ host's equivalent. A suitable baseline is:
 > stepwise-implementer; use stepwise-manager only when delegation and
 > dependency coordination are requested. Well-scoped changes and routine Git
 > or file operations may proceed directly.
+
+Also offer to record Stepwise declarations from the convention's Repository
+Declarations section in the same instruction file, under a `Stepwise` heading.
+Record only values the user states or the repository already uses, such as a
+documentation root or index, planning root, `Profile`, `Decision log`,
+`Output markers`, or `Frontmatter`. Frontmatter is on by default; when
+`Frontmatter: off` is approved, omit the `Allowed Values` and `Boards` sections
+of the planning-root template. Omit any setting that keeps its default.
+
+Offer **integrate only** mode when the repository already has its own
+documentation index. In this mode, add only the workflow rule and the
+approved declarations to the instruction file, skip section 3, and create no
+baseline documentation or planning files. Always record at least the
+`Documentation index` and the `Planning root` (declared or resolved) as
+declarations so the skills find the repository's own layout; create a missing
+planning directory only when the first plan is written.
 
 Optional custom agents must not become mandatory merely because they are
 installed. Integrate with existing vocabulary and precedence. If an existing
@@ -48,8 +66,9 @@ Obtain approval for this exact plan before applying it.
 
 ## 3. Optional Missing Baseline
 
-When the repository lacks an instruction or documentation baseline, propose
-only the missing paths:
+Skip this section in integrate-only mode. When the repository lacks an
+instruction or documentation baseline, propose only the missing paths (using a
+declared documentation root in place of `docs/`):
 
     AGENTS.md
     docs/
@@ -73,7 +92,7 @@ Apply only the approved instruction and baseline changes. Then verify:
 
 - the repository instruction says exactly when Stepwise skills apply;
 - existing instructions remain coherent and unrelated content is preserved;
-- `docs/README.md`, when present, links to the convention and the single
+- the documentation index, when created by this activation, links to the convention and the single
   planning-root index;
 - no second planning root was created;
 - no installation destination or unrelated host configuration changed.

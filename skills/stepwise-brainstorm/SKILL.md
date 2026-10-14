@@ -13,11 +13,22 @@ Keep semantic design decisions in the approved brief and authoritative Markdown
 artifacts. Do not copy private reasoning or vendor-specific orchestration into
 the brief.
 
-## Golden Rule: YAGNI
+## Clean-Code Priorities
 
-Apply YAGNI (You Aren't Gonna Need It) as the default scope and design
-principle throughout brainstorming. Design for the concrete problem and
-validated requirements at hand, not for speculative future needs:
+Apply these priorities throughout brainstorming, in this order:
+
+1. **KISS** (Keep It Simple, Stupid): prefer the clearest design with the
+   fewest moving parts that satisfies the stated need.
+2. **YAGNI** (You Aren't Gonna Need It): design for validated current
+   requirements, not speculative future needs.
+3. **DRY** (Don't Repeat Yourself): remove duplicated knowledge or behavior
+   when a small shared solution makes the current design clearer; do not
+   introduce an abstraction solely because similar code might appear later.
+4. **SOLID**: use its principles as a secondary check for real boundaries,
+   responsibilities, and dependencies. Do not add interfaces, layers, or
+   indirection merely to satisfy a SOLID label.
+
+In particular:
 
 - Challenge requests, abstractions, extension points, configuration, and
   compatibility layers that do not serve a current, evidenced use case.
@@ -31,28 +42,37 @@ validated requirements at hand, not for speculative future needs:
   drawbacks.
 - Revisit YAGNI during design approval and planning-brief review to detect
   scope creep before implementation begins.
+- Prefer direct composition and existing project patterns over a new framework,
+  hierarchy, or extension mechanism unless the current requirement needs it.
 
 ## Documentation Navigation
 
 Before exploring project context:
 
 1. Read the project's `AGENTS.md` or equivalent instruction file.
-2. Read `docs/README.md` when it exists.
-3. Read `docs/folder-structure.md` when it exists; otherwise read the bundled
-   `references/folder-structure.md` in this skill.
+2. Read the declared documentation index; if none is declared, read
+   `README.md` in the declared documentation root; if neither is declared, read
+   `docs/README.md` when it exists.
+3. Read `folder-structure.md` in the documentation root when it exists;
+   otherwise read the bundled `references/folder-structure.md` in this skill.
 4. Follow the relevant section index and explicit document links only. Do not
-   scan every document under `docs/`.
+   scan every document under the documentation root.
 
-Use the shared folder convention for all documentation paths. Exploratory
-brainstorming artifacts belong in `docs/drafts/`; coherent proposals belong in
-`docs/design/`. Do not create either optional section unless the user asks for
+Use the shared folder convention for all documentation paths, substituting a
+declared documentation root for `docs/`. Write artifacts and reply in chat in the languages set by the shared convention's language rule. When a
+decision log is declared, treat each entry not marked superseded, rejected, or
+proposed as a confirmed constraint and list it by identifier among the brief's
+constraints. Label any new decision you introduce `Proposed` until the user
+confirms it; do not edit the log without the user's approval.
+Exploratory brainstorming artifacts belong in `drafts/` and coherent
+proposals in `design/`, both under the documentation root. Do not create either optional section unless the user asks for
 a durable artifact or the project already uses that section.
 
 ## Workflow
 
 1. Explore project context.
    - Read applicable repository instructions, existing plans, architecture documents, relevant source code, tests, and current conventions.
-   - Start from `docs/README.md` and follow the smallest relevant document chain to the current epic, milestone, phase, or task.
+   - Start from the documentation index and follow the smallest relevant document chain to the current epic, milestone, phase, or task.
    - Read linked architecture, decision, design, and reference documents only when they are relevant to the request.
    - Summarize only context that materially affects the decision.
    - Separate established facts from assumptions and unknowns.
@@ -100,9 +120,9 @@ a durable artifact or the project already uses that section.
    - Ask the next logically grouped set of at most three questions, applying the same per-question context and per-option explanation requirements, then revise the approaches and design.
     - Do not prepare a plan or invoke `stepwise-planner` until the user explicitly approves the design.
     - If the user requests a durable record of an unresolved exploration, store
-     it in `docs/drafts/` and update the nearest index.
+     it in `drafts/` under the documentation root and update the nearest index.
    - If the user requests a durable approved or active proposal, store it in
-     `docs/design/` and update the nearest index.
+     `design/` under the documentation root and update the nearest index.
    - Include a `Document Context` section and links to the relevant document
      chain in any persisted artifact.
 
@@ -162,7 +182,7 @@ package directly to the user.
 
 ## Output Markers
 
-Use emojis sparingly in user-facing headings and result labels, never as decoration or on every bullet:
+Output markers are on by default. Omit all emojis when `Output markers: off` applies under the shared convention (declared `off`, or undeclared with repository instructions asking for plain output). When on, use emojis sparingly in user-facing headings and result labels, never as decoration or on every bullet:
 
 - `📋` plan, scope, or planning brief
 - `🔍` investigation or review

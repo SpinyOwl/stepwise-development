@@ -12,7 +12,9 @@ Manage execution of Stepwise high-level graphs and low-level ordered task plans 
 ## Planning Root Compatibility
 
 Resolve plan paths using the single planning-root rule in the shared
-`folder-structure` convention; do not apply a separate precedence rule.
+`folder-structure` convention, including a planning root declared in the
+repository instruction file; do not apply a separate precedence rule. Read the
+declared documentation index first and honor the declared `Profile`. Write artifacts and reply in chat in the languages set by the shared convention's language rule.
 
 ## Optional Graph Discovery
 
@@ -27,11 +29,12 @@ and acceptance still come only from authoritative sources.
 
 1. Ground the plan before delegation.
    - Read the requested plan, milestone, or implementation document.
+   - For a phase with `Phase Implementation State`, read the roll-up and reconcile it with the task documents before delegating.
    - Locate the one authoritative Execution Record for every executable task in the requested boundary. Verify the nine required fields are present in the required order, and reconcile its status with task checkboxes, prerequisites, and the current worktree before delegating or accepting work. Stop for repair when a record is absent, duplicated, structurally invalid, or materially contradictory.
    - Read local repository instructions first, starting with `AGENTS.md`.
    - Follow the smallest applicable document chain from `AGENTS.md`. Read additional architecture, implementation, coding, contribution, build, or test guidance only when it governs the assigned boundary.
    - Read nested instruction files for paths likely to be touched.
-   - Check `git status` so unrelated user changes are known and preserved.
+   - Check `git status` so unrelated user changes are known and preserved. If the project is not a Git repository, list the files likely to change and record in the durable handoff that no version-control baseline exists.
 
 2. Build an execution map.
    - Parse only the high-level nodes or low-level tasks in the requested boundary and the external constraints needed to determine readiness. Do not map unrelated portions of a larger plan.
@@ -43,6 +46,11 @@ and acceptance still come only from authoritative sources.
    - Use Mermaid diagrams only as derived consistency views of high-level `Depends on`. Repair stale diagrams when the authoritative fields are clear and the plan is in scope to edit; otherwise warn and continue. Stop only when authoritative high-level dependencies are missing, contradictory, cyclic, or otherwise ambiguous enough to prevent safe sequencing.
    - Build high-level ready sets from authoritative dependencies. For low-level plans, select the earliest incomplete task whose hard prerequisites are satisfied unless an explicit assignment or safe execution choice justifies another ready task.
    - Mark shared files, shared APIs, shared tests, module-boundary risks, migration ordering, and likely conflict surfaces for each ready item.
+   - Apply clean-code priorities in this order when resolving scope or
+     reviewing proposed work: KISS, YAGNI, DRY, then SOLID. Keep the current
+     solution direct, reject speculative layers or extension points, consolidate
+     only demonstrated duplication when it simplifies the result, and use SOLID
+     only for a real responsibility or dependency concern.
    - Decide which ready items must run sequentially and which, if any, can run in parallel.
    - Parallelize conservatively only when ready items are independent by hard constraint, file path, public contract, migration order, verification surface, and module boundary.
    - Treat inferred batch eligibility as a planning aid, not delegation authority. The manager still owns worker dispatch, conflict analysis, and single-writer enforcement; material-decision gates remain authoritative.
@@ -58,6 +66,7 @@ and acceptance still come only from authoritative sources.
 
 4. Dispatch implementers.
    - Use the configured multi-agent or task delegation tool when present. Do not spend time searching for an alternative mechanism when the available tool capabilities are already known.
+   - When no such tool exists but an external agent CLI can be run from the shell, delegate through it. The handoff must name the task document path, the files the agent may change, the forbidden changes (including no commit), and the `stepwise-implementer` skill as the governing workflow; the CLI agent then holds writer ownership of that task's record. Run review passes only in a CLI mode that cannot modify files; if the CLI has no such mode, do not delegate review to it. Treat its output as an unverified report: reconcile it with the diff, the Execution Record, and the evidence before acceptance.
    - Use a named or clearly prompted `stepwise-implementer` worker agent for every code change. Do not edit code directly as `stepwise-manager`.
    - Use the assigned task documents as the durable handoff when they already contain sufficient detail. Create or update a task document only when the plan does not provide a reliable handoff.
     - Store newly required task documents under the resolved planning root, using ID-only parent directories and `{identifier} - {name}.md` for the task file.
@@ -73,7 +82,7 @@ and acceptance still come only from authoritative sources.
    - Assign one item by default. A single implementer may receive a small batch of ready items only when they are tightly related, touch the same coherent area, share one verification cycle, and remain individually traceable in the handoff.
    - Spawn additional `stepwise-implementer` agents only for ready items or batches isolated by hard constraint, path, public contract, migration order, module boundary, and verification surface. State the merge/review order before dispatch.
    - Keep detailed context in the durable handoff, not the delegated prompt. If an immediate constraint such as a changed worktree, newly accepted predecessor, or temporary verification limitation is not yet recorded there, include only that delta in the prompt.
-   - If multi-agent tools are unavailable, stop before making code changes and report that `stepwise-manager` cannot satisfy the delegation requirement in the current environment.
+   - If neither a multi-agent tool nor an external agent CLI is available, stop before making code changes and report that `stepwise-manager` cannot satisfy the delegation requirement in the current environment.
 
 5. Review every implementer result.
    - After a `stepwise-implementer` completes code changes, perform acceptance review before accepting, integrating, or marking assigned work complete. Do not repeat the implementer's full investigation when the handoff and evidence are sufficient.
@@ -89,8 +98,10 @@ and acceptance still come only from authoritative sources.
    - Verify that any plan checkbox updates are limited to the assigned work and are supported by completed implementation and verification evidence.
    - Reject or send back work that drifts scope, batches extra items, weakens module boundaries, misses tests, leaves unchecked acceptance criteria unsupported, or absorbs unrelated user changes.
    - Compare every Execution Record claim with the current diff, verification evidence, task checkboxes, acceptance checks, and any reviewer findings. Do not accept work while those sources contradict one another.
+   - Under `Frontmatter: on`, the manager-owned values are the frontmatter `review`, `review_note`, `resolved`, and the `Completed` value of `status`; read the `Review Outcome` wording below as `review` with `review_note`, set `resolved` only with `Completed`, and set `updated`.
    - Persist the manager-owned `Review Outcome` and acceptance disposition before reporting or dispatching successor work. On acceptance, set `Review Outcome` to `Accepted` or `Not Required` as applicable and set `Status` to `Completed` only when every completion gate is satisfied. On rejection, record `Changes Requested`, keep `Status` as `In Progress` or `Blocked`, and write the exact remaining work and resume instruction.
    - Require the implementer to fix review findings when the issue belongs to the assigned work; record unrelated improvements as follow-up notes.
+   - On accepting a task in a phase with `Phase Implementation State`, update the phase document: mark the task-index checkbox, increase `Progress`, set the next active task or action, and refresh phase-level blockers; set the phase `Status` only when all its tasks are accepted. When tasks ran in parallel, also reconcile the roll-up from the implementers' reported deltas. Do not copy task detail into the phase.
    - After accepting high-level nodes, mark dependent nodes as newly unlocked only when all authoritative dependencies are complete and unblocked. In low-level plans, identify the next recommended task from document order whose hard prerequisites are satisfied.
    - If the same item or batch fails review twice for materially the same reason, stop and report the blocker instead of repeatedly retrying.
 
@@ -112,6 +123,10 @@ and acceptance still come only from authoritative sources.
 - Treat plan acceptance checks as requirements.
 - Prefer the fewest safe implementation batches. Follow low-level document order as the default recommendation; vary it only for an explicit assignment or a stated safe execution reason. Treat sequential execution as mandatory only where hard dependencies or conflict surfaces require it.
 - Keep each implementer change small, testable, and reviewable.
+- Accept the simplest change that satisfies the assigned acceptance checks.
+  Reject added abstraction, configuration, or indirection without a current
+  need; require DRY remediation only for real duplicated knowledge or behavior
+  where sharing is clearer; treat SOLID as a medium-priority design check.
 - Separate architecture concerns from code-style concerns when reviewing.
 - Record blockers as blockers; do not mark an item complete from partial work.
 - Manual verification is required when UI, runtime, native window, visual behavior, or other human-observable behavior changed and automation does not cover it.
@@ -122,7 +137,7 @@ and acceptance still come only from authoritative sources.
 
 ## Output Markers
 
-Use emojis sparingly in user-facing headings and result labels, never as decoration or on every bullet:
+Output markers are on by default. Omit all emojis when `Output markers: off` applies under the shared convention (declared `off`, or undeclared with repository instructions asking for plain output). When on, use emojis sparingly in user-facing headings and result labels, never as decoration or on every bullet:
 
 - `📋` plan, scope, or planning brief
 - `🔍` investigation or review
@@ -149,7 +164,7 @@ Before accepting an implementer result, verify:
 - The manager-owned review disposition is recorded, and `Completed` is used only when every documented completion gate is satisfied.
 - The diff is limited to the assigned task or high-level node, or an approved small batch.
 - Every assigned high-level node's authoritative dependencies or low-level task's hard prerequisites were complete or explicitly cleared before implementation.
-- Plan acceptance checks are satisfied or explicitly blocked.
+- Plan acceptance checks are satisfied or explicitly blocked; a check that depends on subjective judgment has a recorded `Human Assessment` decision and is not replaced by an automated class.
 - Tests and manual verification match the risk of the change.
 - Plan checkbox edits, if any, belong only to the assigned work.
 - No unrelated user changes were reverted, absorbed, or reformatted.

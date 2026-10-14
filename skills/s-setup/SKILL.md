@@ -35,5 +35,6 @@ Neither operation implies the other.
 
 Installation stops after publishing selected definitions and never changes
 repository instructions. Activation changes only approved repository
-instructions and optional missing documentation baseline files; it never
+instructions (including declared Stepwise settings) and optional missing
+documentation baseline files, or only the instructions in integrate-only mode; it never
 publishes or updates definitions.

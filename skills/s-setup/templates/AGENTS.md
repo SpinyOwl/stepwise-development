@@ -4,7 +4,8 @@
 
 Before planning, designing, implementing, or reviewing:
 
-1. Read `docs/README.md`.
+1. Read the documentation index declared in this file; otherwise `README.md` in
+   the declared documentation root; otherwise `docs/README.md`.
 2. Follow its document map to the relevant section.
 3. Read the parent document chain to the assigned document.
 4. Read only explicitly linked supporting documents required for the task.
