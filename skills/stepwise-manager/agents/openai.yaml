@@ -1,4 +1,0 @@
-interface:
-  display_name: "Stepwise Manager"
-  short_description: "Coordinate high-level graphs and ordered tasks"
-  default_prompt: "Use $stepwise-manager to coordinate this Stepwise plan without changing production code directly. Honor authoritative high-level Depends on fields or optional hard task Prerequisites, otherwise follow document order as the low-level recommendation. Put detailed context in durable handoffs, keep delegated prompts to IDs, paths, and immediate deltas or constraints, parallelize conservatively, and use evidence-focused manager acceptance after independent review."

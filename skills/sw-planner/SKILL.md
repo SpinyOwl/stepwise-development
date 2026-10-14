@@ -1,5 +1,5 @@
 ---
-name: stepwise-planner
+name: sw-planner
 description: Create markdown plans for software projects, using dependency graphs for high-level epics, milestones, and phases and stable-ID tasks for low-level implementation work. Use when turning a roadmap, milestone, feature, refactor, architecture change, bug-fix initiative, or vague goal into structured outcomes or executable tasks with clear acceptance checks, risks, and verification guidance.
 ---
 

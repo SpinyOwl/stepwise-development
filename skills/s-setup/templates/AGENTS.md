@@ -14,7 +14,7 @@ Do not scan all files under `docs/`.
 
 ## Default Development Workflow
 
-Use the `stepwise-brainstorm` skill before planning or implementation when the
+Use the `sw-brainstorm` skill before planning or implementation when the
 request has materially unclear product behavior, competing architecture
 choices, broad or uncertain scope, migration or compatibility risk, or other
 decisions that need user agreement. Also use it whenever the user explicitly
@@ -37,11 +37,11 @@ when requested.
 Choose the shortest responsible path:
 
 ```text
-ambiguous/high-impact request -> stepwise-brainstorm skill -> approved design -> same-context stepwise-planner skill -> implementation
+ambiguous/high-impact request -> sw-brainstorm skill -> approved design -> same-context sw-planner skill -> implementation
 well-scoped request or approved task -> direct planning or implementation
 ```
 
-After design approval, the brainstormer invokes the `stepwise-planner` skill in
+After design approval, the brainstormer invokes the `sw-planner` skill in
 its existing context rather than delegating planning to a separate agent.
 Already gathered project context should not be redundantly reloaded.
 Brainstorming otherwise remains read-only except for explicitly user-approved
@@ -50,5 +50,5 @@ skill after design approval.
 
 Do not repeat brainstorming for work that already has an approved design or
 plan unless implementation exposes a new material decision. If the
-`stepwise-brainstorm` skill is unavailable, briefly explain the missing
+`sw-brainstorm` skill is unavailable, briefly explain the missing
 capability and ask whether to proceed with focused clarification instead.

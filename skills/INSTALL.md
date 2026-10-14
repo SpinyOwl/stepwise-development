@@ -11,10 +11,13 @@ package.
 The supported workflow bundle contains:
 
     s-setup
-    stepwise-brainstorm
-    stepwise-implementer
-    stepwise-manager
-    stepwise-planner
+    sw-brainstorm
+    sw-implementer
+    sw-manager
+    sw-planner
+
+Skills formerly named `stepwise-*` are now `sw-*`; follow the migration
+section of the canonical [installation procedure](s-setup/references/installation.md#migration-from-stepwise--skill-names).
 
 Each skill is independently selectable. Agent selections may add required
 skills through the dependency table in the canonical

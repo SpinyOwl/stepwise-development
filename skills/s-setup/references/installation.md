@@ -32,10 +32,10 @@ destinations:
 
 | Selected agent | Required definitions in the same scope |
 | --- | --- |
-| s-brainstormer | stepwise-brainstorm and stepwise-planner skills |
-| s-implementer | stepwise-implementer skill |
-| s-manager | stepwise-manager and stepwise-implementer skills, plus the s-implementer agent |
-| s-planner | stepwise-planner skill |
+| s-brainstormer | sw-brainstorm and sw-planner skills |
+| s-implementer | sw-implementer skill |
+| s-manager | sw-manager and sw-implementer skills, plus the s-implementer agent |
+| s-planner | sw-planner skill |
 | s-reviewer | None |
 
 Show direct selections and resolved dependencies separately. A dependency is
@@ -153,3 +153,28 @@ sequence. Remove only a verified installed definition selected by the user.
 Uninstallation never removes repository-owned instructions or documentation;
 deactivation is a separate repository instruction change governed by the
 [activation procedure](activation.md).
+
+## Migration from `stepwise-*` Skill Names
+
+The skills `stepwise-brainstorm`, `stepwise-planner`, `stepwise-implementer`,
+and `stepwise-manager` were renamed `sw-brainstorm`, `sw-planner`,
+`sw-implementer`, and `sw-manager`. The new names are separate packages, so an
+update installs them beside any old ones; it never renames or removes an old
+package. Migrate in this order:
+
+1. Inspect every native location for installed `stepwise-*` skill directories
+   and for repository instructions that name them (`AGENTS.md`, host
+   equivalents, and documentation such as `docs/guides/`).
+2. Install the selected `sw-*` skills through sections 1-7 above.
+3. Plan the removal of each old `stepwise-*` package that is an exact copy or
+   exact link of a former release, following Removal. Treat a modified old
+   package as a conflict and leave it for the user.
+4. Plan an instruction change that replaces the old names with the new ones in
+   the repository instructions, and obtain approval separately, as for
+   activation.
+5. Verify that each old name is gone from the discovered skills and from the
+   repository instructions, that no name is discovered twice, and that a second
+   inspection is a no-op.
+
+Custom agents (`s-planner`, `s-manager`, and others) keep their names; update
+them in the same plan so they reference the `sw-*` skills.

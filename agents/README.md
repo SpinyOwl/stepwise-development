@@ -79,7 +79,7 @@ Install the Stepwise adapters needed for the intended workflow. The
 manager adapter delegates code changes to `s-implementer` and may delegate
 independent review to `s-reviewer`. `s-planner` remains available as an
 optional standalone planning agent; `s-brainstormer` invokes the
-`stepwise-planner` skill in its own context and does not require that agent.
+`sw-planner` skill in its own context and does not require that agent.
 
 Do not commit API keys, tokens, credentials, or absolute machine-specific
 paths in an agent definition.

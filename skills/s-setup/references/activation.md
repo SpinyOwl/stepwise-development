@@ -32,9 +32,9 @@ existing root and do not create a second planning tree.
 Show the exact instruction to add or integrate into `AGENTS.md` or the selected
 host's equivalent. A suitable baseline is:
 
-> For ambiguous or high-impact software changes, use stepwise-brainstorm
+> For ambiguous or high-impact software changes, use sw-brainstorm
 > before planning. For approved Stepwise plan tasks, use
-> stepwise-implementer; use stepwise-manager only when delegation and
+> sw-implementer; use sw-manager only when delegation and
 > dependency coordination are requested. Well-scoped changes and routine Git
 > or file operations may proceed directly.
 

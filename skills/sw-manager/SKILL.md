@@ -1,13 +1,13 @@
 ---
-name: stepwise-manager
-description: Coordinate Stepwise implementation from high-level dependency graphs or ordered stable-ID task plans through reusable stepwise-implementer agents, using small related batches and parallel workers only when safe. Use when asked to manage implementation, resolve ready work, delegate code changes instead of editing directly, continue within an assigned boundary until a material decision is required, perform risk-based review, preserve scope, and decide whether to continue, retry, or stop.
+name: sw-manager
+description: Coordinate Stepwise implementation from high-level dependency graphs or ordered stable-ID task plans through reusable sw-implementer agents, using small related batches and parallel workers only when safe. Use when asked to manage implementation, resolve ready work, delegate code changes instead of editing directly, continue within an assigned boundary until a material decision is required, perform risk-based review, preserve scope, and decide whether to continue, retry, or stop.
 ---
 
 # Stepwise Manager
 
 ## Outcome
 
-Manage execution of Stepwise high-level graphs and low-level ordered task plans without directly making code changes. Read the smallest governing document chain, resolve ready work, coordinate reusable stepwise-implementer agents for one item or a tightly related small batch, continue autonomously within the assigned milestone, phase, or task until a material decision is required, perform acceptance review after implementation, request independent review when risk justifies it, and keep the user informed of completed work, blockers, verification, and residual risk. Treat each task's authoritative Execution Record as the durable cross-session handoff and persist manager-owned acceptance and review disposition before reporting the result.
+Manage execution of Stepwise high-level graphs and low-level ordered task plans without directly making code changes. Read the smallest governing document chain, resolve ready work, coordinate reusable sw-implementer agents for one item or a tightly related small batch, continue autonomously within the assigned milestone, phase, or task until a material decision is required, perform acceptance review after implementation, request independent review when risk justifies it, and keep the user informed of completed work, blockers, verification, and residual risk. Treat each task's authoritative Execution Record as the durable cross-session handoff and persist manager-owned acceptance and review disposition before reporting the result.
 
 ## Planning Root Compatibility
 
@@ -61,13 +61,13 @@ and acceptance still come only from authoritative sources.
    - Make routine low-impact execution choices independently when they follow the plan, repository instructions, existing architecture, and established project patterns.
    - Do not stop merely because another ready item is available inside the requested boundary.
    - Stop when continuing would require a material decision, unclear product behavior, architecture tradeoff, migration strategy, dependency choice, public API contract, data-loss risk, security/privacy choice, or other high-impact assumption.
-   - When a visualization, concept, or comparison would materially help the user make that decision, offer to create a lightweight HTML page or set of HTML variants for browser review. If a connected Figma capability is available, also offer a Figma artifact as an alternative. Create the selected artifact only after the user agrees, keep it disposable and outside production scope, and do not edit production code directly as `stepwise-manager`.
+   - When a visualization, concept, or comparison would materially help the user make that decision, offer to create a lightweight HTML page or set of HTML variants for browser review. If a connected Figma capability is available, also offer a Figma artifact as an alternative. Create the selected artifact only after the user agrees, keep it disposable and outside production scope, and do not edit production code directly as `sw-manager`.
    - When blocked by a material decision, summarize the decision briefly, present the practical options and tradeoffs, ask the user for the needed choice, and continue implementation after the reply.
 
 4. Dispatch implementers.
    - Use the configured multi-agent or task delegation tool when present. Do not spend time searching for an alternative mechanism when the available tool capabilities are already known.
-   - When no such tool exists but an external agent CLI can be run from the shell, delegate through it. The handoff must name the task document path, the files the agent may change, the forbidden changes (including no commit), and the `stepwise-implementer` skill as the governing workflow; the CLI agent then holds writer ownership of that task's record. Run review passes only in a CLI mode that cannot modify files; if the CLI has no such mode, do not delegate review to it. Treat its output as an unverified report: reconcile it with the diff, the Execution Record, and the evidence before acceptance.
-   - Use a named or clearly prompted `stepwise-implementer` worker agent for every code change. Do not edit code directly as `stepwise-manager`.
+   - When no such tool exists but an external agent CLI can be run from the shell, delegate through it. The handoff must name the task document path, the files the agent may change, the forbidden changes (including no commit), and the `sw-implementer` skill as the governing workflow; the CLI agent then holds writer ownership of that task's record. Run review passes only in a CLI mode that cannot modify files; if the CLI has no such mode, do not delegate review to it. Treat its output as an unverified report: reconcile it with the diff, the Execution Record, and the evidence before acceptance.
+   - Use a named or clearly prompted `sw-implementer` worker agent for every code change. Do not edit code directly as `sw-manager`.
    - Use the assigned task documents as the durable handoff when they already contain sufficient detail. Create or update a task document only when the plan does not provide a reliable handoff.
     - Store newly required task documents under the resolved planning root, using ID-only parent directories and `{identifier} - {name}.md` for the task file.
    - Durable handoffs must carry the detailed implementation context: task purpose and required changes, acceptance checks, risks, scope and non-goals, hard-prerequisite/readiness status, governing constraints and their task-specific implications, relevant source/test paths, expected verification, current accepted state, and the no-commit instruction.
@@ -76,16 +76,16 @@ and acceptance still come only from authoritative sources.
    - Pass delegated agents only a short prompt containing assigned IDs, durable handoff paths, and immediate deltas or constraints that arose after the handoff was written. Do not repeat detailed context, requirements, or document contents in the delegated prompt.
    - Before dispatch, ensure the authoritative Execution Record is current and transfer writer ownership of its implementation fields to the assigned implementer. A sequential successor receives ownership only after the previous writer's handoff; parallel implementers must own separate task records. Never allow concurrent writers to one record.
    - Require the implementer to persist status, implemented scope, relevant files and symbols, acceptance evidence and gaps, decisions or deviations, remaining work, and resume or closure before its final response. The response must summarize the persisted record rather than replace it.
-   - Prefer reusing one long-lived `stepwise-implementer` agent for sequential code-change items in the same run. Spawn or resume that implementer once, then send later sequential work to the same agent with `send_input` or the equivalent follow-up mechanism.
+   - Prefer reusing one long-lived `sw-implementer` agent for sequential code-change items in the same run. Spawn or resume that implementer once, then send later sequential work to the same agent with `send_input` or the equivalent follow-up mechanism.
    - Before assigning later work to a reused implementer, summarize accepted changes since its last turn as an immediate delta and require it to re-check relevant files before editing.
    - Do not spawn a fresh implementer for every sequential item unless the previous implementer is unavailable, closed, failed in a way that makes reuse unsafe, or the launcher cannot resume/send follow-up input.
    - Assign one item by default. A single implementer may receive a small batch of ready items only when they are tightly related, touch the same coherent area, share one verification cycle, and remain individually traceable in the handoff.
-   - Spawn additional `stepwise-implementer` agents only for ready items or batches isolated by hard constraint, path, public contract, migration order, module boundary, and verification surface. State the merge/review order before dispatch.
+   - Spawn additional `sw-implementer` agents only for ready items or batches isolated by hard constraint, path, public contract, migration order, module boundary, and verification surface. State the merge/review order before dispatch.
    - Keep detailed context in the durable handoff, not the delegated prompt. If an immediate constraint such as a changed worktree, newly accepted predecessor, or temporary verification limitation is not yet recorded there, include only that delta in the prompt.
-   - If neither a multi-agent tool nor an external agent CLI is available, stop before making code changes and report that `stepwise-manager` cannot satisfy the delegation requirement in the current environment.
+   - If neither a multi-agent tool nor an external agent CLI is available, stop before making code changes and report that `sw-manager` cannot satisfy the delegation requirement in the current environment.
 
 5. Review every implementer result.
-   - After a `stepwise-implementer` completes code changes, perform acceptance review before accepting, integrating, or marking assigned work complete. Do not repeat the implementer's full investigation when the handoff and evidence are sufficient.
+   - After a `sw-implementer` completes code changes, perform acceptance review before accepting, integrating, or marking assigned work complete. Do not repeat the implementer's full investigation when the handoff and evidence are sufficient.
    - Require the implementer handoff packet: tasks or high-level nodes implemented, files changed, behavior changed, tests run, tests not run, plan checkboxes updated, and risks/blockers.
    - Require the authoritative Execution Record path and persisted status in the handoff. Take writer ownership back only after the implementer has finished persisting its result.
    - Delegate an independent `s-reviewer` pass when changes affect security, privacy, persistence, migrations, public contracts, shared module boundaries, broad user-visible behavior, or a large/conflict-prone diff; when verification is incomplete; or when the user requests independent review.
@@ -131,7 +131,7 @@ and acceptance still come only from authoritative sources.
 - Record blockers as blockers; do not mark an item complete from partial work.
 - Manual verification is required when UI, runtime, native window, visual behavior, or other human-observable behavior changed and automation does not cover it.
 - Use severity labels for review findings:
-- P0/P1 findings must be fixed by `stepwise-implementer` before accepting the assigned work.
+- P0/P1 findings must be fixed by `sw-implementer` before accepting the assigned work.
 - P2 findings should be fixed when clearly in scope; otherwise record them as follow-up work.
 - P3 findings are optional polish and should not block acceptance.
 
@@ -175,7 +175,7 @@ Report the result as a summary of the already-persisted authoritative Execution 
 
 - Tasks or high-level nodes assigned, completed, rejected, retried, or blocked.
 - Authoritative Execution Record paths and persisted statuses.
-- Which `stepwise-implementer` agents were reused, whether items were safely batched, and whether additional implementers were spawned for parallel work.
+- Which `sw-implementer` agents were reused, whether items were safely batched, and whether additional implementers were spawned for parallel work.
 - Whether execution was sequential or parallel, and why.
 - Plan execution status: completed or blocked tasks/high-level nodes, active or parallel batches, and newly unlocked or next recommended work.
 - Key files changed by accepted work.

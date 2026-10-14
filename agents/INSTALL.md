@@ -32,10 +32,10 @@ Resolve the complete same-scope closure before destination inspection:
 
 | Agent | Required installed definitions |
 | --- | --- |
-| s-brainstormer | stepwise-brainstorm and stepwise-planner skills |
-| s-implementer | stepwise-implementer skill |
-| s-manager | stepwise-manager and stepwise-implementer skills, plus s-implementer |
-| s-planner | stepwise-planner skill |
+| s-brainstormer | sw-brainstorm and sw-planner skills |
+| s-implementer | sw-implementer skill |
+| s-manager | sw-manager and sw-implementer skills, plus s-implementer |
+| s-planner | sw-planner skill |
 | s-reviewer | None |
 
 s-planner is an optional standalone entry point. The brainstormer applies the

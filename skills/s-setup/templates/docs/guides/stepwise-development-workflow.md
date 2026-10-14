@@ -3,7 +3,7 @@
 Use the shortest workflow that preserves the decisions and verification the
 change actually needs:
 
-    ambiguous/high-impact request -> stepwise-brainstorm skill -> approved design -> same-context stepwise-planner skill -> implementation
+    ambiguous/high-impact request -> sw-brainstorm skill -> approved design -> same-context sw-planner skill -> implementation
     well-scoped request or approved task -> direct planning or implementation
 
 Authoritative repository documents hold scope, dependencies, decisions,
@@ -12,7 +12,7 @@ boundaries remain authoritative for every tool effect.
 
 ## Use Brainstorming
 
-Start the stepwise-brainstorm skill when work has one or more of these
+Start the sw-brainstorm skill when work has one or more of these
 characteristics:
 
 - Materially unclear product or API behavior.
@@ -22,7 +22,7 @@ characteristics:
 - A user request to brainstorm or compare approaches.
 
 The design must be approved before the brainstorming workflow invokes the
-stepwise-planner skill in its existing context. Reuse the project context
+sw-planner skill in its existing context. Reuse the project context
 already gathered. A separate planning-brief approval is needed only when the
 brief introduces a new material decision.
 
@@ -31,7 +31,7 @@ explicitly approved draft or design documents, approved mockups, and plan
 artifacts created by the same-context planner after design approval.
 
 An installed s-brainstormer custom agent may host this workflow, but it is
-optional. The stepwise-brainstorm skill remains the portable contract.
+optional. The sw-brainstorm skill remains the portable contract.
 
 ## Bypass Brainstorming
 

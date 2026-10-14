@@ -2,9 +2,9 @@
 
 This policy is the single normative contract for optional Graphify-assisted
 discovery. Its canonical source identity is
-`skills/stepwise-implementer/references/optional-graph-discovery.md`.
-Byte-identical package projections under `stepwise-planner` and
-`stepwise-manager` exist only so each independently installed workflow package
+`skills/sw-implementer/references/optional-graph-discovery.md`.
+Byte-identical package projections under `sw-planner` and
+`sw-manager` exist only so each independently installed workflow package
 remains self-contained; the dependency-free repository checker rejects drift.
 
 Graphify is an optional, query-first discovery accelerator. Markdown plans and

@@ -1,5 +1,5 @@
 ---
-name: stepwise-implementer
+name: sw-implementer
 description: Implement one stable-ID task or high-level plan node, or a manager-assigned batch of tightly related ready work, without committing changes. Use when asked to implement specific task IDs, apply the next planned work, execute a Stepwise plan incrementally, or make a small testable code change while preserving unrelated work and reporting verification.
 ---
 
@@ -42,7 +42,7 @@ still come only from authoritative sources.
    - For assigned `E<N>`, `M<N>`, or `P<N>` nodes, treat `Depends on` as authoritative. Treat `Parallelizable with` and legacy `Enables` as advisory only.
    - For assigned `T<N>` tasks, require `Purpose`, `Changes`, `Acceptance Checks`, and `Risks`; treat optional `Prerequisites` as hard dependencies or readiness conditions. When `Prerequisites` is absent, document order is the recommended execution order, not a hard dependency.
    - Tolerate legacy task-level `Depends on`, `Enables`, and `Parallelizable with` metadata. Interpret legacy `Depends on` as `Prerequisites` and the other fields as advisory; do not reject or rewrite usable tasks solely to modernize metadata.
-   - Verify authoritative high-level dependencies or low-level hard prerequisites are complete or explicitly cleared by `stepwise-manager` before editing. If not, stop and report the unmet constraint.
+   - Verify authoritative high-level dependencies or low-level hard prerequisites are complete or explicitly cleared by `sw-manager` before editing. If not, stop and report the unmet constraint.
    - Treat Mermaid diagrams as derived views of high-level `Depends on`. Repair a stale diagram only when plan edits are within the assignment; otherwise report a warning and continue. Stop only when authoritative dependencies are missing, contradictory, cyclic, or otherwise ambiguous enough to prevent safe work.
    - Read local repository instructions before any code changes, starting with `AGENTS.md`.
    - Follow the smallest applicable document chain from `AGENTS.md`. Read additional architecture, implementation, coding, contribution, build, or test guidance only when it governs the assigned work.
@@ -147,7 +147,7 @@ Report the result concisely as a summary of the already-persisted Execution Reco
 
 ## Implementer Handoff
 
-When reporting to `stepwise-manager`, include this explicit packet:
+When reporting to `sw-manager`, include this explicit packet:
 
 - Tasks/nodes implemented:
 - Files changed:

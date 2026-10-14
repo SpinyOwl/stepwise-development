@@ -1,0 +1,4 @@
+interface:
+  display_name: "Stepwise Planner"
+  short_description: "Plan high-level graphs and ordered tasks"
+  default_prompt: "Use $sw-planner to create the requested Stepwise plan under the planning root resolved by the shared folder convention. Use E<N>/M<N>/P<N> high-level nodes with authoritative Depends on fields and derived Mermaid views; use graphless stable-ID T<N> implementation tasks in recommended document order, with optional Prerequisites only for hard constraints."
